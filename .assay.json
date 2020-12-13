@@ -3,6 +3,6 @@
     "suite/api.go"
   ],
   "include": [
-    "stub.go"
+    "."
   ]
 }
