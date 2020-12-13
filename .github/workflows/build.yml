@@ -4,6 +4,10 @@ on:
     branches:
       - main
       - /refs/heads/main
+  pull_request:
+    types:
+      - opened
+      - synchronize
 
 jobs:
   it:
