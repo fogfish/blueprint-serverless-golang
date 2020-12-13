@@ -1,7 +1,7 @@
 <p align="center">
   <img src="./doc/logo.gif" height="240" />
   <h3 align="center">Blueprint: Serverless Golang</h3>
-  <p align="center"><strong>Golang serverless RESTful application</strong></p>
+  <p align="center"><strong>Skeleton of Golang serverless application built with AWS CDK</strong></p>
 
   <p align="center">
     <!-- Documentation -->
@@ -56,7 +56,7 @@ TODO:
  * How To use GitHub template feature
  * How To upgrade the template in existing app
  * How To Customize Template
- 
+
 -->
 
 ## Getting started
