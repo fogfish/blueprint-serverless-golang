@@ -21,7 +21,7 @@ func TestLookup() assay.Arrow {
 		ƒ.ServedJSON(),
 		ƒ.Recv(&seq),
 	).Then(
-		ç.Value(seq).Is([]scud.Stub{
+		ç.Value(&seq).Is([]scud.Stub{
 			{ID: "a"}, {ID: "b"}, {ID: "c"},
 		}),
 	)
