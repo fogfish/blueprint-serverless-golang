@@ -1,0 +1,40 @@
+##
+## checks Infrastructure as a Code
+##
+name: aws
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: checkout
+        uses: actions/checkout@v2
+        with:
+          path: src/github.com/${{ github.repository }}
+
+      - name: install
+        run: |
+          npm -C src/github.com/${{ github.repository }}/cloud \
+            install
+
+      - name: compile
+        run: |
+          npm -C src/github.com/${{ github.repository }}/cloud \
+            run tsc
+
+      - name: lint
+        run: |
+          npm -C src/github.com/${{ github.repository }}/cloud \
+            run lint
+
+      - name: test
+        run: |
+          npm -C src/github.com/${{ github.repository }}/cloud \
+            run test
+
