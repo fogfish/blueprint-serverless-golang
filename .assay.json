@@ -1,5 +1,8 @@
 {
   "suites": [
     "suite/api.go"
+  ],
+  "include": [
+    "stub.go"
   ]
 }
