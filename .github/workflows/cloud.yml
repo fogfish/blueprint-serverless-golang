@@ -31,6 +31,7 @@ jobs:
 
       - name: install
         run: |
+          go get -v -t -d github.com/${{ github.repository }}/...
           npm -C src/github.com/${{ github.repository }}/cloud \
             install
 
