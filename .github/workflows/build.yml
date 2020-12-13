@@ -1,15 +1,12 @@
-##
-## checks Golang
-##
-name: golang
+name: build
 on:
-  pull_request:
-    types:
-      - opened
-      - synchronize
+  push:
+    branches:
+      - main
+      - /refs/heads/main
 
 jobs:
-  check:
+  it:
     runs-on: ubuntu-latest
     steps:
 
@@ -39,9 +36,11 @@ jobs:
           go get github.com/mattn/goveralls
           go get github.com/lawrencewoodman/roveralls
 
-      - name: go deps
+      - name: deps
         run: |
           go get -v -t -d github.com/${{ github.repository }}/...
+          npm -C src/github.com/${{ github.repository }}/cloud \
+            install
 
       ##
       ##
@@ -53,14 +52,6 @@ jobs:
         run: |
           go test github.com/${{ github.repository }}/...
 
-      - name: golint
-        run: |
-          golint -set_exit_status github.com/${{ github.repository }}/...
-
-      - name: go vet
-        run: |
-          go vet github.com/${{ github.repository }}/...
-
       - name: coverage
         env:
           COVERALLS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -68,3 +59,17 @@ jobs:
           cd $(go env GOPATH)/src/github.com/${{ github.repository }} && roveralls
           goveralls -coverprofile=$(go env GOPATH)/src/github.com/${{ github.repository }}/roveralls.coverprofile -service=github
 
+      ##
+      ##
+      - name: aws access
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
+          aws-region: eu-west-1
+
+      - name: cdk deploy
+        run: |
+          npm -C src/github.com/${{ github.repository }}/cloud \
+            run -- cdk deploy scud-latest \
+            -c vsn=latest

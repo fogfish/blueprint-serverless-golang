@@ -63,8 +63,7 @@ npm -C cloud run lint
 Build entire application (both Golang and its AWS Infrastructure). It should compile Golang code, assemble binaries for AWS Lambda and produce AWS CloudFormation template
 
 ```bash
-cd cloud
-npm run cdk synth
+npm -C cloud run -- cdk synth
 ```
 
 ### Deploy
@@ -72,8 +71,7 @@ npm run cdk synth
 Deploy an application to AWS account, it requires a valid AWS credentials either access keys or assumed roles.
 
 ```bash
-cd cloud
-npm run cdk deploy
+npm -C cloud run -- cdk deploy
 ```
 
 In few seconds, the application becomes available at
@@ -88,7 +86,7 @@ Destroy the application and remove all its AWS resource
 
 ```bash
 cd cloud
-npm run cdk destroy
+npm -C cloud run -- cdk destroy
 ```
 
 ### CI/CD

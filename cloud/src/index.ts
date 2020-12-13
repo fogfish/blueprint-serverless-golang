@@ -14,12 +14,13 @@ const config = {
     region: process.env.CDK_DEFAULT_REGION,
   }
 }
+const vsn: string = app.node.tryGetContext('vsn') || 'latest'
 
 // ----------------------------------------------------------------------------
 //
 // Stack
 //
 // ----------------------------------------------------------------------------
-const stack = new cdk.Stack(app, `scud`, { ...config })
+const stack = new cdk.Stack(app, `scud-${vsn}`, { ...config })
 
 pure.join(stack, service)
