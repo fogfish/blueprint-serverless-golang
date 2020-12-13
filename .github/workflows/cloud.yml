@@ -1,7 +1,7 @@
 ##
 ## checks Infrastructure as a Code
 ##
-name: aws
+name: cloud
 on:
   pull_request:
     types:
@@ -12,6 +12,17 @@ jobs:
   check:
     runs-on: ubuntu-latest
     steps:
+
+      - name: golang
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.15
+
+      - name: fix GOPATH
+        run: |
+          echo "GOPATH=$GITHUB_WORKSPACE" >> $GITHUB_ENV
+          echo "$GITHUB_WORKSPACE/bin" >> $GITHUB_PATH
+        shell: bash
 
       - name: checkout
         uses: actions/checkout@v2
