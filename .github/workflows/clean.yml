@@ -1,7 +1,7 @@
 ##
 ## Clean Sandbox of Pull Request
 ##
-name: spawn
+name: clean
 on:
   pull_request:
     types:
@@ -53,7 +53,7 @@ jobs:
       - name: cdk destroy
         run: |
           npm -C src/github.com/${{ github.repository }}/cloud \
-            run -- cdk destroy ${{ matrix.stack }}-pr${{ github.event.number }} \
+            run -- cdk destroy -f ${{ matrix.stack }}-pr${{ github.event.number }} \
             -c vsn=pr${{ github.event.number }}
 
       - uses: thollander/actions-comment-pull-request@master

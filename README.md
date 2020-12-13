@@ -34,9 +34,12 @@ github.com/.../the-beautiful-app
   ├─ cloud                       // IaC, aws cdk application
   |    └─ ...                    // It orchestrate everything
   |
-  └─ .github
-        └─ ...                   // CI/CD with GitHub Actions
-
+  ├─ .github
+  |      └─ ...                   // CI/CD with GitHub Actions
+  |
+  └─ suite                        // integration testing suite 
+       ├─ api.go
+       └─ ... 
 ```
 
 ### Dependencies 

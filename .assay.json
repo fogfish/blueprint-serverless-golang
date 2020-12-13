@@ -1,0 +1,5 @@
+{
+  "suites": [
+    "suite/xxx.go"
+  ]
+}
