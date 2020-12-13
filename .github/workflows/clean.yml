@@ -1,0 +1,62 @@
+##
+## Clean Sandbox of Pull Request
+##
+name: spawn
+on:
+  pull_request:
+    types:
+      - closed
+
+jobs:
+  it:
+    strategy:
+      matrix:
+        stack: [scud]
+    runs-on: ubuntu-latest
+    steps:
+
+      ##
+      ##
+      - name: golang
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.15
+
+      - name: fix GOPATH
+        run: |
+          echo "GOPATH=$GITHUB_WORKSPACE" >> $GITHUB_ENV
+          echo "$GITHUB_WORKSPACE/bin" >> $GITHUB_PATH
+        shell: bash
+
+      - name: checkout
+        uses: actions/checkout@v2
+        with:
+          path: src/github.com/${{ github.repository }}
+
+      ##
+      ##
+      - name: deps
+        run: |
+          go get -v -t -d github.com/${{ github.repository }}/...
+          npm -C src/github.com/${{ github.repository }}/cloud \
+            install
+
+      ##
+      ##
+      - name: aws access
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
+          aws-region: eu-west-1
+  
+      - name: cdk destroy
+        run: |
+          npm -C src/github.com/${{ github.repository }}/cloud \
+            run -- cdk destroy ${{ matrix.stack }}-pr${{ github.event.number }} \
+            -c vsn=pr${{ github.event.number }}
+
+      - uses: thollander/actions-comment-pull-request@master
+        with:
+          message: 'sandbox #${{ github.event.number }} is destroyed successfully.'
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
