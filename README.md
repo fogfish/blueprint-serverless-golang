@@ -31,7 +31,7 @@ github.com/.../the-beautiful-app
   |         |    └─ main.go
   |         └─ ...
   |
-  ├─ cloud                       // aws cdk application and IaC 
+  ├─ cloud                       // IaC, aws cdk application
   |    └─ ...                    // It orchestrate everything
   |
   └─ .github
@@ -91,4 +91,9 @@ npm -C cloud run -- cdk destroy
 
 ### CI/CD
 
+The project uses GitHub Actions for CI/CD. The following workflows are supported:
 
+* **checks** (`golang.yml`, `cloud.yml`) the quality of software assets with scope on unit tests only every time a new change is proposed via Pull Request. CI/CD does checks in parallel for Golang and TypeScript IaC;
+* **spawns** (`spawn.yml`) a sandbox(ed) deployment of the application to target AWS account for continuous integrations;
+* **builds** (`build.yml`) validates quality of `main` branch once Pull Request is merge. The pipeline is also updates the development environment in the target AWS account;
+* **carries** (`carry.yml`) application snapshot to production environment.  

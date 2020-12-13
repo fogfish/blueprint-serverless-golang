@@ -1,15 +1,10 @@
-name: build
+name: carry
 on:
-  push:
-    branches:
-      - main
-      - /refs/heads/main
+  release:
+    types: [published]
 
 jobs:
   it:
-    strategy:
-      matrix:
-        stack: [scud]
     runs-on: ubuntu-latest
     steps:
 
@@ -33,34 +28,11 @@ jobs:
 
       ##
       ##
-      - name: go get tools
-        run: |
-          go get golang.org/x/lint/golint
-          go get github.com/mattn/goveralls
-          go get github.com/lawrencewoodman/roveralls
-
       - name: deps
         run: |
           go get -v -t -d github.com/${{ github.repository }}/...
           npm -C src/github.com/${{ github.repository }}/cloud \
             install
-
-      ##
-      ##
-      - name: go build
-        run: |
-          go build -v github.com/${{ github.repository }}/...
-
-      - name: go test
-        run: |
-          go test github.com/${{ github.repository }}/...
-
-      - name: coverage
-        env:
-          COVERALLS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          cd $(go env GOPATH)/src/github.com/${{ github.repository }} && roveralls
-          goveralls -coverprofile=$(go env GOPATH)/src/github.com/${{ github.repository }}/roveralls.coverprofile -service=github
 
       ##
       ##
@@ -74,5 +46,5 @@ jobs:
       - name: cdk deploy
         run: |
           npm -C src/github.com/${{ github.repository }}/cloud \
-            run -- cdk deploy ${{ matrix.stack }}-latest \
-            -c vsn=latest
+            run -- cdk deploy scud-${{ github.event.release.name }} \
+            -c vsn=${{ github.event.release.name }}

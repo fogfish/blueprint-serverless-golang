@@ -9,6 +9,9 @@ on:
 
 jobs:
   it:
+    strategy:
+      matrix:
+        stack: [scud]
     runs-on: ubuntu-latest
     if: github.event.label.name == '[@] deploy'
     steps:
@@ -51,7 +54,7 @@ jobs:
       - name: cdk deploy
         run: |
           npm -C src/github.com/${{ github.repository }}/cloud \
-            run -- cdk deploy scud-pr${{ github.event.number }} \
+            run -- cdk deploy ${{ matrix.stack }}-pr${{ github.event.number }} \
             -c vsn=pr${{ github.event.number }}
 
       - uses: buildsville/add-remove-label@v1
