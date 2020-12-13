@@ -1,5 +1,13 @@
 package suite
 
+/*
+
+See following projects for details about testing strategy
+https://github.com/assay-it/blueprint-continuous-quality
+https://github.com/assay-it/blueprint-serverless-api
+
+*/
+
 import (
 	"github.com/assay-it/sdk-go/assay"
 	ç "github.com/assay-it/sdk-go/cats"
