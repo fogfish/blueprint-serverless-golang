@@ -3,8 +3,8 @@ package scud_test
 import (
 	"testing"
 
+	scud "github.com/fogfish/blueprint-serverless-golang"
 	"github.com/fogfish/it"
-	"github.com/fogfish/scud-golang"
 )
 
 func TestStub(t *testing.T) {

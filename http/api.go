@@ -1,9 +1,9 @@
 package http
 
 import (
+	scud "github.com/fogfish/blueprint-serverless-golang"
 	µ "github.com/fogfish/gouldian"
 	"github.com/fogfish/gouldian/path"
-	"github.com/fogfish/scud-golang"
 )
 
 // ServiceScud is and example RESTfull Service

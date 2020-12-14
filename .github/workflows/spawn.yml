@@ -55,7 +55,20 @@ jobs:
         run: |
           npm -C src/github.com/${{ github.repository }}/cloud \
             run -- cdk deploy ${{ matrix.stack }}-pr${{ github.event.number }} \
-            -c vsn=pr${{ github.event.number }}
+            -c vsn=pr${{ github.event.number }} \
+            --outputs-file $GITHUB_WORKSPACE/stack.json
+
+      ##
+      ## discover url of newly deployed api before the testing   
+      - name: discover
+        id: discover
+        run: |
+          echo ::set-output name=target::$(jq -r '.["${{ matrix.stack }}-pr${{ github.event.number }}"] | to_entries | .[] | select(.key|test("GatewayEndpoint.*")) | .value ' < $GITHUB_WORKSPACE/stack.json)
+
+      - uses: assay-it/github-actions-webhook@latest
+        with:
+          secret: ${{ secrets.ASSAY_SECRET_KEY }}
+          target: ${{ steps.discover.outputs.target }}
 
       - uses: buildsville/add-remove-label@v1
         with:

@@ -3,10 +3,10 @@ package http_test
 import (
 	"testing"
 
+	"github.com/fogfish/blueprint-serverless-golang/http"
 	µ "github.com/fogfish/gouldian"
 	"github.com/fogfish/gouldian/mock"
 	"github.com/fogfish/it"
-	"github.com/fogfish/scud-golang/http"
 )
 
 func TestLookup(t *testing.T) {
