@@ -98,34 +98,42 @@ github.com/.../the-beautiful-app
        └─ ... 
 ```
 
-### Dependencies 
+### Development workflows
+
+**dependencies** 
 
 The application requires 3rd party libraries for dev and opts. Fetch them with the following commands:
 
 ```bash
+# Golang deps
 go get -d ./...
+
+# AWS CDK TypeScript deps
 npm -C cloud install
 ```
 
-### Test
+**unit testing**
 
 Test the Golang application and its cloud infrastructure
 
 ```bash
+# Golang unit testing
 go test ./...
+
+# AWS CDK TypeScript testing
 npm -C cloud run test
 npm -C cloud run lint
 ```
 
-### Build
+**build**
 
 Build entire application (both Golang and its AWS Infrastructure). It should compile Golang code, assemble binaries for AWS Lambda and produce AWS CloudFormation template
 
 ```bash
-npm -C cloud run -- cdk synth
+npm -C cloud run -- cdk synth 
 ```
 
-### Deploy
+**deploy**
 
 Deploy an application to AWS account, it requires a valid AWS credentials either access keys or assumed roles.
 
@@ -139,19 +147,18 @@ In few seconds, the application becomes available at
 curl https://xxxxxxxxxx.execute-api.eu-west-1.amazonaws.com/api/scud
 ```
 
-### Destroy
+**destroy**
 
-Destroy the application and remove all its AWS resource
+Destroy the application and remove all its resource from AWS account
 
 ```bash
-cd cloud
 npm -C cloud run -- cdk destroy
 ```
 
 
 ## Continuos Delivery 
 
-The project uses GitHub Actions for CI/CD including best practices of continuos deployment into AWS. See and customize [.github/workflows](.github/workflows):
+Continuos Integration and Delivery is implemented using GitHub Actions. It consists of multiple [.github/workflows](.github/workflows):
 
 * **checks** (`golang.yml`, `cloud.yml`) the quality of software assets with scope on unit tests only. Checks are executed in parallel for application logic and infrastructure every time a new change is proposed via Pull Request.
 * **spawns** (`spawn.yml`) a sandbox(ed) deployment of the application to target AWS account for continuous integrations;
@@ -169,9 +176,6 @@ The library is [MIT](LICENSE) licensed and accepts contributions via GitHub pull
 3. Commit your changes (`git commit -am 'Added some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create new Pull Request
-
-
-The build and testing process requires [Go](https://golang.org) version 1.14 or later.
 
 
 ### commit message
