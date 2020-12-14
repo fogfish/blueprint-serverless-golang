@@ -67,7 +67,7 @@ Use `git` features to update the blueprint from upstream
 ```bash
 git remote add blueprint https://github.com/fogfish/blueprint-serverless-golang
 git fetch blueprint
-git merge blueprint/main
+git merge blueprint/main --allow-unrelated-histories
 ```
 
 ## Getting started
@@ -194,6 +194,8 @@ strategy:
       matrix:
         stack: [scud]
 ```
+- [ ] setup access to AWS account for CI/CD
+- [ ] integrate api testing 
 - [ ] tune CI/CD pipeline according to purpose of your application either removing or commenting out blocks
 
 
