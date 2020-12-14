@@ -33,31 +33,42 @@
 
 --- 
 
-This project crafts a fully functional template of Golang serverless RESTful application for Amazon Web Services. The template is a hybrid solution, composed of pure "application logic" developed with Golang, TypeScript-based Infrastructure as a Code implemented on top of AWS CDK and couple of open source libraries to flavour development experience. 
+This project crafts a fully functional blueprint of Golang serverless RESTful application for Amazon Web Services. The blueprint is a hybrid solution, composed of pure "application logic" developed with Golang, TypeScript-based Infrastructure as a Code implemented on top of AWS CDK and couple of open source libraries to flavour development experience. 
 
 
 ## Inspiration
 
 [AWS CDK](https://aws.amazon.com/cdk) is amazing technology to automate the development and operation of application into one process and one codebase.
 
-However, seeding of new repository for development of Golang serverless application requires a boilerplate code. This template helps you to focus on the application development than waste a time with establish project layout, configure AWS CDK, setting up CI/CD and figuring out how to testing the application. All this is resolved within this template.
+However, seeding of new repository for development of Golang serverless application requires a boilerplate code. This blueprint helps you to focus on the application development than waste a time with establish project layout, configure AWS CDK, setting up CI/CD and figuring out how to testing the application. All these issues are resolved within this blueprint.
 
 ## Installation
 
-This template is fully functional "Hello World" like application that delivers a skeleton for Golang serverless development with AWS CDK. Clone the repository and follow [Getting started](#getting-started) instructions to evaluate its applicability for your purposes. It should take less than 5 minutes to build and deploy the template.
+The blueprint is fully functional application that delivers a skeleton for Golang serverless development with AWS CDK. Clone the repository and follow [Getting started](#getting-started) instructions to evaluate its applicability for your purposes. It should take less than 5 minutes to build and deploy the template in AWS.
 
 ```
 go get github.com/fogfish/blueprint-serverless-golang
 ```
- 
-<!-- 
 
-TODO:
- * How To use GitHub template feature
- * How To upgrade the template in existing app
- * How To Customize Template
+See [Getting Started](#getting-started) and [Customize Blueprint](#customize-blueprint) chapters for details.
 
--->
+
+### Install from GitHub
+
+[**Use this template**](https://github.com/fogfish/blueprint-serverless-golang/generate)
+
+Create a new GitHub repository from this blueprint.
+
+
+### Upgrade the template
+
+Use `git` features to update the blueprint from upstream
+
+```bash
+git remote add blueprint https://github.com/fogfish/blueprint-serverless-golang
+git fetch blueprint
+git merge blueprint/main
+```
 
 ## Getting started
 
@@ -65,7 +76,7 @@ TODO:
 
 The structure resembles the standard package layout proposed in [this blog post](https://medium.com/@benbjohnson/standard-package-layout-7cdbc8391fc1):
 
-1. the root package contains core types to describe domain of your application. A simple types that has no dependency to technology.
+1. the root package contains core types to describe domain of your application. It contains simple types that has no dependency to technology.
 
 2. Use sub-packages to isolate dependencies to external technologies so that they act as bridge between your domain and technology adaptation. 
 
@@ -73,11 +84,11 @@ The structure resembles the standard package layout proposed in [this blog post]
 
 ```
 github.com/.../the-beautiful-app  
-  ├─ stub.go                     // domain types and its tests
-  ├─ ...                         // other domain types
+  ├─ stub.go                     // domain types, unit test
+  ├─ ...                         // "algebra" of your application
   |
-  ├─ http                        // http and rest adaptations
-  |    ├─ api.go                 // api endpoint(s) and its tests
+  ├─ http                        // RESTful API and HTTP protocol
+  |    ├─ api.go                 // api endpoint(s), unit tests,
   |    └─ ...                    // other endpoints
   |
   ├─ aws                         // adaptations to AWS
@@ -88,12 +99,12 @@ github.com/.../the-beautiful-app
   |         └─ ...
   |
   ├─ cloud                       // IaC, aws cdk application
-  |    └─ ...                    // It orchestrate everything
+  |    └─ ...                    // orchestrate ops model
   |
-  ├─ .github
-  |      └─ ...                   // CI/CD with GitHub Actions
+  ├─ .github                     // CI/CD with GitHub Actions
+  |      └─ ...                   
   |
-  └─ suite                        // api testing suite 
+  └─ suite                       // API testing suite 
        ├─ api.go
        └─ ... 
 ```
@@ -127,7 +138,7 @@ npm -C cloud run lint
 
 **build**
 
-Build entire application (both Golang and its AWS Infrastructure). It should compile Golang code, assemble binaries for AWS Lambda and produce AWS CloudFormation template
+Build entire application (both Golang and its AWS infrastructure). It should compile Golang code, assemble binaries for AWS Lambda and produce AWS CloudFormation template
 
 ```bash
 npm -C cloud run -- cdk synth 
@@ -165,6 +176,25 @@ Continuos Integration and Delivery is implemented using GitHub Actions. It consi
 * **builds** (`build.yml`) validates quality of `main` branch once Pull Request is merge. Upon the quality check completion, the pipeline deploys changes to the development environment at target AWS account;
 * **carries** (`carry.yml`) "immutable" application snapshot to production environment when GitHub release is published;
 * **cleans** (`clean.yml`) sandbox environment after Pull Request is either merged or closed.
+
+`AWS_ACCESS_KEY` and `AWS_SECRET_ACCESS_KEY` are required to enable deployment by GitHub Actions. Store these credentials to secret key vault at your fork settings (Your Fork > Settings > Secrets).
+
+
+## Customize Blueprint
+
+- [ ] add RESTful api endpoint to [http](http) package
+- [ ] add Lambda functions to [aws/lambda](aws/lambda) package
+- [ ] set the name of your stack at [cloud/src/index.ts](cloud/src/index.ts) and enhance the infrastructure
+```ts
+const stack = new cdk.Stack(app, `scud-${vsn}`, { ...config })
+```
+- [ ] update the target stack name at CI/CD workflows [spawn.yml](.github/workflows/spawn.yml), [build.yml](.github/workflows/build.yml) and [carry.yml](.github/workflows/carry.yml)
+```yaml
+strategy:
+      matrix:
+        stack: [scud]
+```
+- [ ] tune CI/CD pipeline according to purpose of your application either removing or commenting out blocks
 
 
 ## How To Contribute

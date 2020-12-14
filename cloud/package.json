@@ -1,5 +1,5 @@
 {
-  "name": "scud-golang",
+  "name": "blueprint-serverless-golang",
   "version": "0.0.0",
   "dependencies": {
     "@aws-cdk/aws-apigateway": "*",
