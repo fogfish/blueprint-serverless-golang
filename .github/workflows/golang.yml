@@ -14,7 +14,7 @@ jobs:
     steps:
 
       ##
-      ##
+      ## setup environment
       - name: golang
         uses: actions/setup-go@v2
         with:
@@ -32,7 +32,7 @@ jobs:
           path: src/github.com/${{ github.repository }}
 
       ##
-      ##
+      ## fetch deps
       - name: go get tools
         run: |
           go get golang.org/x/lint/golint
@@ -44,7 +44,7 @@ jobs:
           go get -v -t -d github.com/${{ github.repository }}/...
 
       ##
-      ##
+      ## builds and tests
       - name: go build
         run: |
           go build -v github.com/${{ github.repository }}/...

@@ -14,7 +14,7 @@ jobs:
     steps:
 
       ##
-      ##
+      ## setup environment
       - name: golang
         uses: actions/setup-go@v2
         with:
@@ -32,7 +32,7 @@ jobs:
           path: src/github.com/${{ github.repository }}
 
       ##
-      ##
+      ## fetch deps
       - name: deps
         run: |
           go get -v -t -d github.com/${{ github.repository }}/...
@@ -40,7 +40,7 @@ jobs:
             install
 
       ##
-      ##
+      ## builds and tests
       - name: compile
         run: |
           npm -C src/github.com/${{ github.repository }}/cloud \

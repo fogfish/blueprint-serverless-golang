@@ -14,7 +14,7 @@ jobs:
     steps:
 
       ##
-      ##
+      ## setup environment
       - name: golang
         uses: actions/setup-go@v2
         with:
@@ -32,7 +32,7 @@ jobs:
           path: src/github.com/${{ github.repository }}
 
       ##
-      ##
+      ## fetch deps
       - name: go get tools
         run: |
           go get golang.org/x/lint/golint
@@ -46,7 +46,7 @@ jobs:
             install
 
       ##
-      ##
+      ## builds and tests
       - name: go build
         run: |
           go build -v github.com/${{ github.repository }}/...
@@ -63,12 +63,12 @@ jobs:
           goveralls -coverprofile=$(go env GOPATH)/src/github.com/${{ github.repository }}/roveralls.coverprofile -service=github
 
       ##
-      ##
+      ## deploys application to aws
       - name: aws access
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: eu-west-1
 
       - name: cdk deploy
@@ -79,11 +79,11 @@ jobs:
             --outputs-file $GITHUB_WORKSPACE/stack.json
 
       ##
-      ## discover url of newly deployed api before the testing   
+      ## discover url of deployed api and runs api testing   
       - name: discover
         id: discover
         run: |
-          echo ::set-output name=target::$(jq -r '.["${{ matrix.stack }}-pr${{ github.event.number }}"] | to_entries | .[] | select(.key|test("GatewayEndpoint.*")) | .value ' < $GITHUB_WORKSPACE/stack.json)
+          echo ::set-output name=target::$(jq -r '.["${{ matrix.stack }}-latest"] | to_entries | .[] | select(.key|test("GatewayEndpoint.*")) | .value ' < $GITHUB_WORKSPACE/stack.json)
 
       - uses: assay-it/github-actions-webhook@latest
         with:
