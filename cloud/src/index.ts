@@ -21,6 +21,6 @@ const vsn: string = app.node.tryGetContext('vsn') || 'latest'
 // Stack
 //
 // ----------------------------------------------------------------------------
-const stack = new cdk.Stack(app, `scud-${vsn}`, { ...config })
+const stack = new cdk.Stack(app, `blueprint-golang-${vsn}`, { ...config })
 
 pure.join(stack, service)

@@ -70,13 +70,22 @@ git fetch blueprint
 git merge blueprint/main --allow-unrelated-histories
 ```
 
+## Requirements
+
+Before Getting started, you have to ensure
+
+* [Golang](https://golang.org/dl/) development environment
+* [AWS TypeScript CDK](https://docs.aws.amazon.com/cdk/latest/guide/getting_started.html)
+* Access to AWS Account
+
+
 ## Getting started
 
 **Let's have a look on the repository structure**
 
 The structure resembles the standard package layout proposed in [this blog post](https://medium.com/@benbjohnson/standard-package-layout-7cdbc8391fc1):
 
-1. the root package contains core types to describe domain of your application. It contains simple types that has no dependency to technology.
+1. the root package contains core types to describe domain of your application. It contains simple types that has no dependency to technology but their implements core logic and use-cases.
 
 2. Use sub-packages to isolate dependencies to external technologies so that they act as bridge between your domain and technology adaptation. 
 
@@ -186,13 +195,13 @@ Continuos Integration and Delivery is implemented using GitHub Actions. It consi
 - [ ] add Lambda functions to [aws/lambda](aws/lambda) package
 - [ ] set the name of your stack at [cloud/src/index.ts](cloud/src/index.ts) and enhance the infrastructure
 ```ts
-const stack = new cdk.Stack(app, `scud-${vsn}`, { ...config })
+const stack = new cdk.Stack(app, `blueprint-golang-${vsn}`, { ...config })
 ```
 - [ ] update the target stack name at CI/CD workflows [spawn.yml](.github/workflows/spawn.yml), [build.yml](.github/workflows/build.yml) and [carry.yml](.github/workflows/carry.yml)
 ```yaml
 strategy:
       matrix:
-        stack: [scud]
+        stack: [blueprint-golang]
 ```
 - [ ] setup access to AWS account for CI/CD
 - [ ] integrate api testing 
