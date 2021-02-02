@@ -67,7 +67,7 @@ Use `git` features to update the blueprint from upstream
 ```bash
 git remote add blueprint https://github.com/fogfish/blueprint-serverless-golang
 git fetch blueprint
-git merge blueprint/main --allow-unrelated-histories
+git merge blueprint/main --allow-unrelated-histories --squash
 ```
 
 ## Requirements
