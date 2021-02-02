@@ -17,8 +17,8 @@
       <img src="https://img.shields.io/github/last-commit/fogfish/blueprint-serverless-golang.svg" />
     </a>
     <!-- Coverage -->
-    <a href="https://coveralls.io/github/fogfish/blueprint-serverless-golang?branch=master">
-      <img src="https://coveralls.io/repos/github/fogfish/blueprint-serverless-golang/badge.svg?branch=master" />
+    <a href="https://coveralls.io/github/fogfish/blueprint-serverless-golang?branch=main">
+      <img src="https://coveralls.io/repos/github/fogfish/blueprint-serverless-golang/badge.svg?branch=main" />
     </a>
     <!-- Go Card -->
     <a href="https://goreportcard.com/report/github.com/fogfish/blueprint-serverless-golang">
