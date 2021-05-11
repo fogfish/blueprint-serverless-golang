@@ -6,7 +6,8 @@ import * as path from 'path'
 //
 const MyFun = (): lambda.FunctionProps =>
   scud.handler.Go({
-    code: path.join(__dirname, '../../aws/lambda/scud'),
+    sourceCodePackage: path.join(__dirname, '../..'),
+    sourceCodeLambda: 'aws/lambda/scud',
   })
 
 //

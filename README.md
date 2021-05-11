@@ -74,7 +74,7 @@ git merge blueprint/main --allow-unrelated-histories --squash
 
 Before Getting started, you have to ensure
 
-* [Golang](https://golang.org/dl/) development environment
+* [Golang](https://golang.org/dl/) development environment v1.16 or later
 * [AWS TypeScript CDK](https://docs.aws.amazon.com/cdk/latest/guide/getting_started.html)
 * Access to AWS Account
 
@@ -191,6 +191,7 @@ Continuos Integration and Delivery is implemented using GitHub Actions. It consi
 
 ## Customize Blueprint
 
+- [ ] rebuild go.mod and go.sum for your application
 - [ ] add RESTful api endpoint to [http](http) package
 - [ ] add Lambda functions to [aws/lambda](aws/lambda) package
 - [ ] set the name of your stack at [cloud/src/index.ts](cloud/src/index.ts) and enhance the infrastructure
