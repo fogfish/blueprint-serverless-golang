@@ -51,7 +51,7 @@ jobs:
         run: |
           go test -v -coverprofile=profile.cov ./...
         env:
-          GOPATH: /home/runner/work/blueprint-serverless-golang/go
+          GOPATH: /home/runner/work/${{ github.event.repository.name }}/go
 
       - uses: shogo82148/actions-goveralls@v1
         with:
