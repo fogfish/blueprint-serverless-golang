@@ -183,11 +183,12 @@ Continuos Integration and Delivery is implemented using GitHub Actions. It consi
 ## Customize Blueprint
 
 - [ ] rebuild go.mod and go.sum for your application
-- [ ] add RESTful api endpoint to [http](http) package
+- [ ] add RESTful api endpoints to [http](http) package
 - [ ] add Lambda functions to [aws/lambda](aws/lambda) package
 - [ ] set the name of your stack at [cloud/blueprint.go](cloud/src/blueprint.go) and enhance the infrastructure
-```ts
-const stack = new cdk.Stack(app, `blueprint-golang-${vsn}`, { ...config })
+```go
+stackID := fmt.Sprintf("blueprint-golang-%s", vsn(app))
+stack := awscdk.NewStack(app, jsii.String(stackID), config)
 ```
 - [ ] update the target stack name at CI/CD workflows [spawn.yml](.github/workflows/spawn.yml), [build.yml](.github/workflows/build.yml) and [carry.yml](.github/workflows/carry.yml)
 ```yaml
@@ -202,7 +203,7 @@ strategy:
 
 ## How To Contribute
 
-The library is [MIT](LICENSE) licensed and accepts contributions via GitHub pull requests:
+The blueprint is [MIT](LICENSE) licensed and accepts contributions via GitHub pull requests:
 
 1. Fork it
 2. Create your feature branch (`git checkout -b my-new-feature`)

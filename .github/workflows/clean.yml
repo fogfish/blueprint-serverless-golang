@@ -27,9 +27,9 @@ jobs:
 
       ##
       ## fetch deps
-      - name: deps
+      - name: go get tools
         run: |
-          go get -v -t -d ./...
+          npm install -g aws-cdk
 
       ##
       ## destroy application from aws
@@ -45,7 +45,7 @@ jobs:
           cdk destroy -f ${{ matrix.stack }}-pr${{ github.event.number }} \
             -c vsn=pr${{ github.event.number }}
         env:
-          GOPATH: /home/runner/work/blueprint-serverless-golang/go
+          GOPATH: /home/runner/work/${{ github.event.repository.name }}/go
 
       - uses: thollander/actions-comment-pull-request@v1
         with:

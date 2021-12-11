@@ -28,6 +28,7 @@ jobs:
       - name: go get tools
         run: |
           go get golang.org/x/lint/golint
+          npm install -g aws-cdk
 
       - name: deps
         run: |
@@ -43,7 +44,7 @@ jobs:
         run: |
           go test -v -coverprofile=profile.cov ./...
         env:
-          GOPATH: /home/runner/work/blueprint-serverless-golang/go
+          GOPATH: /home/runner/work/${{ github.event.repository.name }}/go
 
       - uses: shogo82148/actions-goveralls@v1
         with:
@@ -64,7 +65,7 @@ jobs:
             -c vsn=latest \
             --outputs-file $GITHUB_WORKSPACE/stack.json
         env:
-          GOPATH: /home/runner/work/blueprint-serverless-golang/go
+          GOPATH: /home/runner/work/${{ github.event.repository.name }}/go
 
       ##
       ## discover url of deployed api and runs api testing   

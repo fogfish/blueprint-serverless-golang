@@ -23,9 +23,9 @@ jobs:
 
       ##
       ## fetch deps
-      - name: deps
+      - name: go get tools
         run: |
-          go get -v -t -d ./...
+          npm install -g aws-cdk
 
       ##
       ## deploys application to aws
@@ -42,7 +42,7 @@ jobs:
             -c vsn=${{ github.event.release.name }} \
             --outputs-file $GITHUB_WORKSPACE/stack.json
         env:
-          GOPATH: /home/runner/work/blueprint-serverless-golang/go
+          GOPATH: /home/runner/work/${{ github.event.repository.name }}/go
 
       ##
       ## discover url of deployed api and runs api testing    
