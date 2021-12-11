@@ -16,26 +16,16 @@ jobs:
       - name: golang
         uses: actions/setup-go@v2
         with:
-          go-version: 1.15
-
-      - name: fix GOPATH
-        run: |
-          echo "GOPATH=$GITHUB_WORKSPACE" >> $GITHUB_ENV
-          echo "$GITHUB_WORKSPACE/bin" >> $GITHUB_PATH
-        shell: bash
+          go-version: 1.17
 
       - name: checkout
         uses: actions/checkout@v2
-        with:
-          path: src/github.com/${{ github.repository }}
 
       ##
       ## fetch deps
-      - name: deps
+      - name: go get tools
         run: |
-          go get -v -t -d github.com/${{ github.repository }}/...
-          npm -C src/github.com/${{ github.repository }}/cloud \
-            install
+          npm install -g aws-cdk
 
       ##
       ## deploys application to aws
@@ -48,10 +38,11 @@ jobs:
 
       - name: cdk deploy
         run: |
-          npm -C src/github.com/${{ github.repository }}/cloud \
-            run -- cdk deploy ${{ matrix.stack }}-${{ github.event.release.name }} \
+          cdk deploy ${{ matrix.stack }}-${{ github.event.release.name }} \
             -c vsn=${{ github.event.release.name }} \
             --outputs-file $GITHUB_WORKSPACE/stack.json
+        env:
+          GOPATH: /home/runner/work/${{ github.event.repository.name }}/go
 
       ##
       ## discover url of deployed api and runs api testing    
@@ -59,9 +50,4 @@ jobs:
         id: discover
         run: |
           echo ::set-output name=target::$(jq -r '.["${{ matrix.stack }}-${{ github.event.release.name }}"] | to_entries | .[] | select(.key|test("GatewayEndpoint.*")) | .value ' < $GITHUB_WORKSPACE/stack.json)
-
-      - uses: assay-it/github-actions-webhook@latest
-        with:
-          secret: ${{ secrets.ASSAY_SECRET_KEY }}
-          target: ${{ steps.discover.outputs.target }}
 

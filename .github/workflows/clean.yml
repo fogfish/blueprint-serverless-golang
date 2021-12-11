@@ -20,26 +20,16 @@ jobs:
       - name: golang
         uses: actions/setup-go@v2
         with:
-          go-version: 1.15
-
-      - name: fix GOPATH
-        run: |
-          echo "GOPATH=$GITHUB_WORKSPACE" >> $GITHUB_ENV
-          echo "$GITHUB_WORKSPACE/bin" >> $GITHUB_PATH
-        shell: bash
+          go-version: 1.17
 
       - name: checkout
         uses: actions/checkout@v2
-        with:
-          path: src/github.com/${{ github.repository }}
 
       ##
       ## fetch deps
-      - name: deps
+      - name: go get tools
         run: |
-          go get -v -t -d github.com/${{ github.repository }}/...
-          npm -C src/github.com/${{ github.repository }}/cloud \
-            install
+          npm install -g aws-cdk
 
       ##
       ## destroy application from aws
@@ -52,11 +42,12 @@ jobs:
   
       - name: cdk destroy
         run: |
-          npm -C src/github.com/${{ github.repository }}/cloud \
-            run -- cdk destroy -f ${{ matrix.stack }}-pr${{ github.event.number }} \
+          cdk destroy -f ${{ matrix.stack }}-pr${{ github.event.number }} \
             -c vsn=pr${{ github.event.number }}
+        env:
+          GOPATH: /home/runner/work/${{ github.event.repository.name }}/go
 
-      - uses: thollander/actions-comment-pull-request@master
+      - uses: thollander/actions-comment-pull-request@v1
         with:
-          message: 'sandbox #${{ github.event.number }} is destroyed successfully.'
+          message: '**sandbox** #${{ github.event.number }} is destroyed successfully.'
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

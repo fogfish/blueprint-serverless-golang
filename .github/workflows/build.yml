@@ -18,49 +18,37 @@ jobs:
       - name: golang
         uses: actions/setup-go@v2
         with:
-          go-version: 1.15
-
-      - name: fix GOPATH
-        run: |
-          echo "GOPATH=$GITHUB_WORKSPACE" >> $GITHUB_ENV
-          echo "$GITHUB_WORKSPACE/bin" >> $GITHUB_PATH
-        shell: bash
+          go-version: 1.17
 
       - name: checkout
         uses: actions/checkout@v2
-        with:
-          path: src/github.com/${{ github.repository }}
 
       ##
       ## fetch deps
       - name: go get tools
         run: |
           go get golang.org/x/lint/golint
-          go get github.com/mattn/goveralls
-          go get github.com/lawrencewoodman/roveralls
+          npm install -g aws-cdk
 
       - name: deps
         run: |
-          go get -v -t -d github.com/${{ github.repository }}/...
-          npm -C src/github.com/${{ github.repository }}/cloud \
-            install
+          go get -v -t -d ./...
 
       ##
       ## builds and tests
       - name: go build
         run: |
-          go build -v github.com/${{ github.repository }}/...
+          go build -v ./...
 
       - name: go test
         run: |
-          go test github.com/${{ github.repository }}/...
-
-      - name: coverage
+          go test -v -coverprofile=profile.cov ./...
         env:
-          COVERALLS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          cd $(go env GOPATH)/src/github.com/${{ github.repository }} && roveralls
-          goveralls -coverprofile=$(go env GOPATH)/src/github.com/${{ github.repository }}/roveralls.coverprofile -service=github
+          GOPATH: /home/runner/work/${{ github.event.repository.name }}/go
+
+      - uses: shogo82148/actions-goveralls@v1
+        with:
+          path-to-profile: profile.cov
 
       ##
       ## deploys application to aws
@@ -73,10 +61,11 @@ jobs:
 
       - name: cdk deploy
         run: |
-          npm -C src/github.com/${{ github.repository }}/cloud \
-            run -- cdk deploy ${{ matrix.stack }}-latest \
+          cdk deploy ${{ matrix.stack }}-latest \
             -c vsn=latest \
             --outputs-file $GITHUB_WORKSPACE/stack.json
+        env:
+          GOPATH: /home/runner/work/${{ github.event.repository.name }}/go
 
       ##
       ## discover url of deployed api and runs api testing   
@@ -85,7 +74,8 @@ jobs:
         run: |
           echo ::set-output name=target::$(jq -r '.["${{ matrix.stack }}-latest"] | to_entries | .[] | select(.key|test("GatewayEndpoint.*")) | .value ' < $GITHUB_WORKSPACE/stack.json)
 
-      - uses: assay-it/github-actions-webhook@latest
+      - name: comment
+        uses: thollander/actions-comment-pull-request@v1
         with:
-          secret: ${{ secrets.ASSAY_SECRET_KEY }}
-          target: ${{ steps.discover.outputs.target }}
+          message: '**sandbox**: ${{ steps.discover.outputs.target }}'
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -17,10 +17,12 @@ func TestLookup(t *testing.T) {
 		mock.URL("/scud"),
 	)
 
-	expect := µ.Ok().
-		With("Content-Type", "application/json").
-		Bytes([]byte(`[{"id":"a"},{"id":"b"},{"id":"c"}]`))
+	endpoint := mock.Endpoint(api.Lookup())
+	expect := µ.Status.OK(
+		µ.WithHeader("Content-Type", "application/json"),
+		µ.WithBytes([]byte(`[{"id":"a"},{"id":"b"},{"id":"c"}]`)),
+	)
 
 	it.Ok(t).
-		If(api.Lookup()(req)).Should().Equal(expect)
+		If(endpoint(req)).Should().Equal(expect)
 }
