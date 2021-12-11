@@ -33,7 +33,7 @@
 
 --- 
 
-This project crafts a fully functional blueprint of Golang serverless RESTful application for Amazon Web Services. The blueprint is a hybrid solution, composed of pure "application logic" developed with Golang, TypeScript-based Infrastructure as a Code implemented on top of AWS CDK and couple of open source libraries to flavour development experience. 
+This project crafts a fully functional blueprint of Golang serverless RESTful application for Amazon Web Services. The blueprint is a hybrid solution, composed of pure "application logic" and Infrastructure as a Code implemented on top of AWS CDK, both developed with Golang. 
 
 
 ## Inspiration
@@ -75,7 +75,7 @@ git merge blueprint/main --allow-unrelated-histories --squash
 Before Getting started, you have to ensure
 
 * [Golang](https://golang.org/dl/) development environment v1.16 or later
-* [AWS TypeScript CDK](https://docs.aws.amazon.com/cdk/latest/guide/getting_started.html)
+* [AWS CDK](https://docs.aws.amazon.com/cdk/latest/guide/work-with.html#work-with-prerequisites)
 * Access to AWS Account
 
 
@@ -114,7 +114,7 @@ github.com/.../the-beautiful-app
   |      └─ ...                   
   |
   └─ suite                       // API testing suite 
-       ├─ api.go
+       ├─ api.go                 // (disabled in this release)
        └─ ... 
 ```
 
@@ -125,11 +125,7 @@ github.com/.../the-beautiful-app
 The application requires 3rd party libraries for dev and opts. Fetch them with the following commands:
 
 ```bash
-# Golang deps
 go get -d ./...
-
-# AWS CDK TypeScript deps
-npm -C cloud install
 ```
 
 **unit testing**
@@ -137,12 +133,7 @@ npm -C cloud install
 Test the Golang application and its cloud infrastructure
 
 ```bash
-# Golang unit testing
 go test ./...
-
-# AWS CDK TypeScript testing
-npm -C cloud run test
-npm -C cloud run lint
 ```
 
 **build**
@@ -150,7 +141,7 @@ npm -C cloud run lint
 Build entire application (both Golang and its AWS infrastructure). It should compile Golang code, assemble binaries for AWS Lambda and produce AWS CloudFormation template
 
 ```bash
-npm -C cloud run -- cdk synth 
+cdk synth
 ```
 
 **deploy**
@@ -158,7 +149,7 @@ npm -C cloud run -- cdk synth
 Deploy an application to AWS account, it requires a valid AWS credentials either access keys or assumed roles.
 
 ```bash
-npm -C cloud run -- cdk deploy
+cdk deploy
 ```
 
 In few seconds, the application becomes available at
@@ -172,7 +163,7 @@ curl https://xxxxxxxxxx.execute-api.eu-west-1.amazonaws.com/api/scud
 Destroy the application and remove all its resource from AWS account
 
 ```bash
-npm -C cloud run -- cdk destroy
+cdk destroy
 ```
 
 
@@ -180,7 +171,7 @@ npm -C cloud run -- cdk destroy
 
 Continuos Integration and Delivery is implemented using GitHub Actions. It consists of multiple [.github/workflows](.github/workflows):
 
-* **checks** (`golang.yml`, `cloud.yml`) the quality of software assets with scope on unit tests only. Checks are executed in parallel for application logic and infrastructure every time a new change is proposed via Pull Request.
+* **checks** (`check.yml`) the quality of software assets with scope on unit tests only. Checks are executed in parallel for application logic and infrastructure every time a new change is proposed via Pull Request.
 * **spawns** (`spawn.yml`) a sandbox(ed) deployment of the application to target AWS account for continuous integrations;
 * **builds** (`build.yml`) validates quality of `main` branch once Pull Request is merge. Upon the quality check completion, the pipeline deploys changes to the development environment at target AWS account;
 * **carries** (`carry.yml`) "immutable" application snapshot to production environment when GitHub release is published;
@@ -194,7 +185,7 @@ Continuos Integration and Delivery is implemented using GitHub Actions. It consi
 - [ ] rebuild go.mod and go.sum for your application
 - [ ] add RESTful api endpoint to [http](http) package
 - [ ] add Lambda functions to [aws/lambda](aws/lambda) package
-- [ ] set the name of your stack at [cloud/src/index.ts](cloud/src/index.ts) and enhance the infrastructure
+- [ ] set the name of your stack at [cloud/blueprint.go](cloud/src/blueprint.go) and enhance the infrastructure
 ```ts
 const stack = new cdk.Stack(app, `blueprint-golang-${vsn}`, { ...config })
 ```

@@ -1,0 +1,54 @@
+##
+## checks Golang
+##
+name: check
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+
+jobs:
+  it:
+    runs-on: ubuntu-latest
+    steps:
+
+      ##
+      ## setup environment
+      - name: golang
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.17
+
+      - name: checkout
+        uses: actions/checkout@v2
+
+      ##
+      ## fetch deps
+      - name: go get tools
+        run: |
+          go get golang.org/x/lint/golint
+
+      ##
+      ## builds and tests
+      - name: go build
+        run: |
+          go build -v ./...
+
+      - name: go vet
+        run: |
+          go vet ./...
+  
+      - name: golint
+        run: |
+          golint ./...
+
+      - name: go test
+        run: |
+          go test -v -coverprofile=profile.cov ./...
+        env:
+          GOPATH: /home/runner/work/blueprint-serverless-golang/go
+
+      - uses: shogo82148/actions-goveralls@v1
+        with:
+          path-to-profile: profile.cov
