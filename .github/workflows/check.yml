@@ -29,6 +29,10 @@ jobs:
         run: |
           go get golang.org/x/lint/golint
 
+      - name: deps
+        run: |
+          go get -v -t -d ./...
+
       ##
       ## builds and tests
       - name: go build
