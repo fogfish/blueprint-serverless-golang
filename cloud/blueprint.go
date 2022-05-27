@@ -56,7 +56,7 @@ func NewBlueprint(scope constructs.Construct) {
 	myfun := scud.NewFunctionGo(scope, jsii.String("MyFun"),
 		&scud.FunctionGoProps{
 			SourceCodePackage: "github.com/fogfish/blueprint-serverless-golang",
-			SourceCodeLambda:  "aws/lambda/scud",
+			SourceCodeLambda:  "cmd/lambda/scud",
 		},
 	)
 	gateway.AddResource("scud", myfun)
