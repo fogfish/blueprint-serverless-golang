@@ -65,8 +65,3 @@ jobs:
         run: |
           echo ::set-output name=target::$(jq -r '.["${{ matrix.stack }}-latest"] | to_entries | .[] | select(.key|test("GatewayEndpoint.*")) | .value ' < $GITHUB_WORKSPACE/stack.json)
 
-      - name: comment
-        uses: thollander/actions-comment-pull-request@v1
-        with:
-          message: '**sandbox**: ${{ steps.discover.outputs.target }}'
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
