@@ -11,11 +11,11 @@ type ServiceScud struct{}
 // Lookup is an example implementation of endpoint
 func (api ServiceScud) Lookup() µ.Routable {
 	return µ.GET(
-		µ.Path("scud"),
-		µ.FMap(func(*µ.Context) error {
+		µ.URI(µ.Path("scud")),
+		func(*µ.Context) error {
 			return µ.Status.OK(
 				µ.WithJSON(scud.NewStubs()),
 			)
-		}),
+		},
 	)
 }
