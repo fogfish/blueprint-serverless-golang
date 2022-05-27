@@ -9,7 +9,28 @@ on:
       - synchronize
 
 jobs:
-  it:
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+
+      - uses: actions/setup-go@v2
+        with:
+          go-version: 1.18
+
+      - uses: actions/checkout@v3
+
+      # disable linter due to linters crash
+      # - uses: golangci/golangci-lint-action@v3.1.0
+      #   with:
+      #     version: latest
+      #     args: --verbose
+
+      - name: go vet
+        run: |
+          go vet ./...
+
+  check:
     runs-on: ubuntu-latest
     steps:
 
@@ -18,38 +39,18 @@ jobs:
       - name: golang
         uses: actions/setup-go@v2
         with:
-          go-version: 1.17
+          go-version: 1.18
 
       - name: checkout
         uses: actions/checkout@v2
 
-      ##
-      ## fetch deps
-      - name: go get tools
-        run: |
-          go get golang.org/x/lint/golint
-
-      - name: deps
-        run: |
-          go get -v -t -d ./...
-
-      ##
-      ## builds and tests
       - name: go build
         run: |
           go build -v ./...
 
-      - name: go vet
-        run: |
-          go vet ./...
-  
-      - name: golint
-        run: |
-          golint ./...
-
       - name: go test
         run: |
-          go test -v -coverprofile=profile.cov ./...
+          go test -v -coverprofile=profile.cov $(go list ./... | grep -v /examples/)
         env:
           GOPATH: /home/runner/work/${{ github.event.repository.name }}/go
 

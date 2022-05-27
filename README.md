@@ -100,10 +100,9 @@ github.com/.../the-beautiful-app
   |    ├─ api.go                 // api endpoint(s), unit tests,
   |    └─ ...                    // other endpoints
   |
-  ├─ aws                         // adaptations to AWS
-  |    ├─ ...                    // any code to deal with AWS APIs
+  ├─ cmd                         // executables of the project
   |    └─ lambda                 // aws lambda's are main packages
-  |         ├─ scud              // each lambda stays at own pkg
+  |         ├─ scud              // each lambda stays at own executable
   |         |    └─ main.go
   |         └─ ...
   |
