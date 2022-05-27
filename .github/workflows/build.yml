@@ -64,3 +64,4 @@ jobs:
         id: discover
         run: |
           echo ::set-output name=target::$(jq -r '.["${{ matrix.stack }}-latest"] | to_entries | .[] | select(.key|test("GatewayEndpoint.*")) | .value ' < $GITHUB_WORKSPACE/stack.json)
+
