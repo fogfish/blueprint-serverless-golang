@@ -72,7 +72,7 @@ jobs:
           type: remove
 
       - uses: peter-evans/close-issue@v2
-         with:
+        with:
           issue-number: ${{ steps.spawn-latest.outputs.issue-number }}
           comment: |
             Latest version of **${{ matrix.stack }}** is deployed to cloud environment:
