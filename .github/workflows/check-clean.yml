@@ -21,7 +21,7 @@ jobs:
       - uses: peter-evans/create-issue-from-file@v4
         id: clean-sandbox
         with:
-          title: Clean up sandbox \#${{ github.event.number }} of `${{ matrix.stack }}` 
+          title: Clean up sandbox pr${{ github.event.number }} of `${{ matrix.stack }}` 
           content-filepath: ./.github/issue-clean-sandbox.md
 
       - uses: peter-evans/create-or-update-comment@v2
