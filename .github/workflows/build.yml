@@ -6,40 +6,30 @@ on:
       - /refs/heads/main
 
 jobs:
-  it:
+
+  cloud:
     strategy:
       matrix:
         stack: [blueprint-golang]
+
     runs-on: ubuntu-latest
     steps:
 
-      ##
-      ## setup environment
-      - name: golang
-        uses: actions/setup-go@v2
+      - uses: peter-evans/create-issue-from-file@v4
+        id: spawn-latest
+        with:
+          title: Spawn ${{ matrix.stack }} latest commit to cloud 
+          content-filepath: ./example-content/output.md
+
+      - uses: actions/setup-go@v2
         with:
           go-version: 1.18
 
-      - name: checkout
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v2
 
       - name: go get tools
         run: |
           npm install -g aws-cdk
-
-      - name: go build
-        run: |
-          go build -v ./...
-
-      - name: go test
-        run: |
-          go test -v -coverprofile=profile.cov $(go list ./... | grep -v /examples/)
-        env:
-          GOPATH: /home/runner/work/${{ github.event.repository.name }}/go
-
-      - uses: shogo82148/actions-goveralls@v1
-        with:
-          path-to-profile: profile.cov
 
       ##
       ## deploys application to aws
@@ -64,4 +54,11 @@ jobs:
         id: discover
         run: |
           echo ::set-output name=target::$(jq -r '.["${{ matrix.stack }}-latest"] | to_entries | .[] | select(.key|test("GatewayEndpoint.*")) | .value ' < $GITHUB_WORKSPACE/stack.json)
+
+      - uses: peter-evans/close-issue@v2
+         with:
+          issue-number: ${{ steps.spawn-latest.outputs.issue-number }}
+          comment: |
+            Latest version of ${{ matrix.stack }} is deployed to cloud environment:
+            - **url**: ${{ steps.discover.outputs.target }}
 

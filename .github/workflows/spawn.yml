@@ -12,28 +12,22 @@ jobs:
     strategy:
       matrix:
         stack: [blueprint-golang]
-    runs-on: ubuntu-latest
+
     if: github.event.label.name == '[@] deploy'
+
+    runs-on: ubuntu-latest
     steps:
 
-      ##
-      ## setup environment
-      - name: golang
-        uses: actions/setup-go@v2
+      - uses: actions/setup-go@v2
         with:
           go-version: 1.18
 
-      - name: checkout
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v2
 
-      ##
-      ## fetches deps
       - name: go get tools
         run: |
           npm install -g aws-cdk
 
-      ##
-      ## deploys application to aws
       - name: aws access
         uses: aws-actions/configure-aws-credentials@v1
         with:

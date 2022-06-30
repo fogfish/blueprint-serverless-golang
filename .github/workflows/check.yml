@@ -1,5 +1,5 @@
 ##
-## checks Golang
+## Quality checks
 ##
 name: check
 on:
@@ -10,7 +10,7 @@ on:
 
 jobs:
 
-  lint:
+  code:
     runs-on: ubuntu-latest
     steps:
 
@@ -20,40 +20,7 @@ jobs:
 
       - uses: actions/checkout@v3
 
-      # disable linter due to linters crash
-      # - uses: golangci/golangci-lint-action@v3.1.0
-      #   with:
-      #     version: latest
-      #     args: --verbose
-
-      - name: go vet
-        run: |
-          go vet ./...
-
-  check:
-    runs-on: ubuntu-latest
-    steps:
-
-      ##
-      ## setup environment
-      - name: golang
-        uses: actions/setup-go@v2
+      - uses: dominikh/staticcheck-action@v1.2.0
         with:
-          go-version: 1.18
-
-      - name: checkout
-        uses: actions/checkout@v2
-
-      - name: go build
-        run: |
-          go build -v ./...
-
-      - name: go test
-        run: |
-          go test -v -coverprofile=profile.cov $(go list ./... | grep -v /examples/)
-        env:
-          GOPATH: /home/runner/work/${{ github.event.repository.name }}/go
-
-      - uses: shogo82148/actions-goveralls@v1
-        with:
-          path-to-profile: profile.cov
+          version: "2022.1"
+          install-go: false

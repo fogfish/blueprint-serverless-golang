@@ -170,10 +170,16 @@ cdk destroy
 
 Continuos Integration and Delivery is implemented using GitHub Actions. It consists of multiple [.github/workflows](.github/workflows):
 
-* **checks** (`check.yml`) the quality of software assets with scope on unit tests only. Checks are executed in parallel for application logic and infrastructure every time a new change is proposed via Pull Request.
+* **check** (`check.yml`) the quality of software assets with scope on unit tests only. Checks are executed in parallel for application logic and infrastructure every time a new change is proposed via Pull Request.
+
+* **tests** (`tests.yml`) unit + cov
+
 * **spawns** (`spawn.yml`) a sandbox(ed) deployment of the application to target AWS account for continuous integrations;
+
 * **builds** (`build.yml`) validates quality of `main` branch once Pull Request is merge. Upon the quality check completion, the pipeline deploys changes to the development environment at target AWS account;
+
 * **carries** (`carry.yml`) "immutable" application snapshot to production environment when GitHub release is published;
+
 * **cleans** (`clean.yml`) sandbox environment after Pull Request is either merged or closed.
 
 `AWS_ACCESS_KEY` and `AWS_SECRET_ACCESS_KEY` are required to enable deployment by GitHub Actions. Store these credentials to secret key vault at your fork settings (Your Fork > Settings > Secrets).
