@@ -5,7 +5,7 @@
 ## [T] - Type prefix
 ## [P] - Priority prefix
 ## [@] - State prefix
-## [🤖] - Automation prefix 
+## [A] - Automation prefix 
 ## [#] - package / category prefix
 ##
 ## How To Use
@@ -110,8 +110,8 @@
   description: the feedback from author is required
 
 ##
-## [🤖] Automation labels
-- name: "[🤖] deploy"
+## [A] Automation labels
+- name: "[A] deploy"
   color: "ffccf1"
   aliases: []
   description: request GitHub Action to deploy 

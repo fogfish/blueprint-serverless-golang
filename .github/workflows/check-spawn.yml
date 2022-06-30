@@ -13,7 +13,7 @@ jobs:
       matrix:
         stack: [blueprint-golang]
 
-    if: github.event.label.name == '[🤖] deploy'
+    if: github.event.label.name == '[A] deploy'
 
     runs-on: ubuntu-latest
     steps:
@@ -61,5 +61,5 @@ jobs:
       - uses: buildsville/add-remove-label@v1
         with:
           token: ${{secrets.GITHUB_TOKEN}}
-          label: '[🤖] deploy'
+          label: '[A] deploy'
           type: remove
