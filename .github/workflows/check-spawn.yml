@@ -13,7 +13,7 @@ jobs:
       matrix:
         stack: [blueprint-golang]
 
-    if: github.event.label.name == '[@] deploy'
+    if: github.event.label.name == '[🤖] deploy'
 
     runs-on: ubuntu-latest
     steps:
