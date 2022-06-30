@@ -1,17 +1,3 @@
-# title
+# Clean up sandbox
 
-An example issue created using content from [example-content/output.md](https://github.com/peter-evans/create-issue-from-file/blob/main/example-content/output.md)
-
-## subtitle
-
-Some text
-
-- bullet points
-- bullet points
-
-"quoted string"
-
-```python
-s = "syntax highlighting"
-print(s)
-```
+The feature integration into `main` is implemented through pull request (no exceptions whatsoever). CI/CD executes automated pull request deployment to the sandbox environment every time new changes are proposed (each commit). The sandbox environment is a disposable deployment dedicated only for pull request validation, which is destroyed by CI/CD when pull request is merged.
