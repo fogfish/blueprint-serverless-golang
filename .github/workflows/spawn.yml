@@ -56,6 +56,13 @@ jobs:
           message: '**sandbox** #${{ github.event.number }} is spawned: ${{ steps.discover.outputs.target }}'
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - uses: peter-evans/create-or-update-comment@v2
+         with:
+          issue-number: ${{ github.event.number }}
+          body: |
+            Latest version of ${{ matrix.stack }} is deployed to cloud environment:
+            - **url**: ${{ steps.discover.outputs.target }}
+
       - uses: buildsville/add-remove-label@v1
         with:
           token: ${{secrets.GITHUB_TOKEN}}
