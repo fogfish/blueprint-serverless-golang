@@ -21,14 +21,20 @@ jobs:
       - uses: peter-evans/create-issue-from-file@v4
         id: clean-sandbox
         with:
-          title: Destroy sandbox pr${{ github.event.number }} of `${{ matrix.stack }}` 
+          title: Clean up sandbox \#${{ github.event.number }} of `${{ matrix.stack }}` 
           content-filepath: ./.github/issue-clean-sandbox.md
+
+      - uses: peter-evans/create-or-update-comment@v2
+        with:
+          issue-number: ${{ steps.clean-sandbox.outputs.issue-number }}
+          body: |
+            Destroying environment of #${{ github.event.number }}     
 
       - uses: peter-evans/create-or-update-comment@v2
         with:
           issue-number: ${{ github.event.number }}
           body: |
-            destroying #${{ steps.destroy-sandbox.outputs.issue-number }}     
+            destroying with #${{ steps.clean-sandbox.outputs.issue-number }}     
 
       - uses: actions/setup-go@v2
         with:
@@ -61,4 +67,4 @@ jobs:
         with:
           issue-number: ${{ steps.clean-sandbox.outputs.issue-number }}
           comment: |
-            Sandbox pr${{ github.event.number }} of **${{ matrix.stack }}** is destroyed.
+            Sandbox #${{ github.event.number }} of **${{ matrix.stack }}** is destroyed.

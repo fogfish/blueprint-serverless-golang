@@ -8,7 +8,9 @@
 ## [A] - Automation prefix 
 ## [#] - package / category prefix
 ##
-## How To Use
+## How To Use:
+##   https://github.com/Financial-Times/github-label-sync
+##
 ##   npm install -g github-label-sync
 ##   github-label-sync --access-token xxxxxx --labels .github/labels.yml fogfish/blueprint-serverless-golang
 ##

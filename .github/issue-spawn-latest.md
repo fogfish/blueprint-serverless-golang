@@ -1,17 +1,3 @@
-# title
+# Spawn latest commit to cloud environment
 
-An example issue created using content from [example-content/output.md](https://github.com/peter-evans/create-issue-from-file/blob/main/example-content/output.md)
-
-## subtitle
-
-Some text
-
-- bullet points
-- bullet points
-
-"quoted string"
-
-```python
-s = "syntax highlighting"
-print(s)
-```
+The `main` branch of your project is always the latest deployable snapshot of a microservice. CI/CD have to automate the `main` snapshot deployments every time when a new feature is merged. 

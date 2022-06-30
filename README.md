@@ -178,7 +178,7 @@ The quality checks are executed every time a new change is proposed via Pull Req
 * **checks** (`check-code.yml`) evaluates a quality of source code and reviews proposed changes (pull requests) using static code analysis.
 * **tests** (`check-test.yml`) the quality of software assets with scope on unit tests only and measures the test coverage.
 * **spawns** (`check-spawn.yml`) a sandbox(ed) deployment of the application to target AWS account for continuous integrations (optionally executed if pull request is marked with `[@] deploy` label);
-* **cleans** (`clean.yml`) sandbox environment after Pull Request is either merged or closed.
+* **cleans** (`check-clean.yml`) sandbox environment after Pull Request is either merged or closed.
 
 ### Check quality of `main` branch
 
