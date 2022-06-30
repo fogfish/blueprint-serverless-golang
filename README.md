@@ -168,7 +168,11 @@ cdk destroy
 
 ## Continuos Delivery 
 
-Continuos Integration and Delivery is implemented using GitHub Actions. It consists of multiple [.github/workflows](.github/workflows):
+Continuos Integration and Delivery is implemented using GitHub Actions. It consists of multiple [.github/workflows](.github/workflows).
+
+### Check quality of Pull Request
+
+### Check quality of `main` branch
 
 * **check** (`check.yml`) the quality of software assets with scope on unit tests only. Checks are executed in parallel for application logic and infrastructure every time a new change is proposed via Pull Request.
 

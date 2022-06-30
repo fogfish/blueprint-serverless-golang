@@ -12,18 +12,27 @@ jobs:
     strategy:
       matrix:
         stack: [blueprint-golang]
+
     runs-on: ubuntu-latest
     steps:
 
-      ##
-      ## setup environment
-      - name: golang
-        uses: actions/setup-go@v2
+      - uses: actions/checkout@v2
+
+      - uses: peter-evans/create-issue-from-file@v4
+        id: clean-sandbox
+        with:
+          title: Destroy sandbox pr${{ github.event.number }} of `${{ matrix.stack }}` 
+          content-filepath: ./.github/issue-clean-sandbox.md
+
+      - uses: peter-evans/create-or-update-comment@v2
+        with:
+          issue-number: ${{ github.event.number }}
+          body: |
+            destroying #${{ steps.destroy-sandbox.outputs.issue-number }}     
+
+      - uses: actions/setup-go@v2
         with:
           go-version: 1.18
-
-      - name: checkout
-        uses: actions/checkout@v2
 
       ##
       ## fetch deps
@@ -47,7 +56,9 @@ jobs:
         env:
           GOPATH: /home/runner/work/${{ github.event.repository.name }}/go
 
-      - uses: thollander/actions-comment-pull-request@v1
+
+      - uses: peter-evans/close-issue@v2
         with:
-          message: '**sandbox** #${{ github.event.number }} is destroyed successfully.'
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          issue-number: ${{ steps.clean-sandbox.outputs.issue-number }}
+          comment: |
+            Sandbox pr${{ github.event.number }} of **${{ matrix.stack }}** is destroyed.

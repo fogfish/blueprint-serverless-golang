@@ -20,12 +20,6 @@ jobs:
 
       - uses: actions/checkout@v2
 
-      - uses: peter-evans/create-issue-from-file@v4
-        id: spawn-latest
-        with:
-          title: Spawn ${{ matrix.stack }} latest commit to cloud 
-          content-filepath: ./.github/issue-spawn-latest.md
-
       - uses: actions/setup-go@v2
         with:
           go-version: 1.18
@@ -69,10 +63,3 @@ jobs:
           token: ${{secrets.GITHUB_TOKEN}}
           label: '[@] deploy'
           type: remove
-
-      - uses: peter-evans/close-issue@v2
-        with:
-          issue-number: ${{ steps.spawn-latest.outputs.issue-number }}
-          comment: |
-            Latest version of **${{ matrix.stack }}** is deployed to cloud environment:
-            - **url**: ${{ steps.discover.outputs.target }}
