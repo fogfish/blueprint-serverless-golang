@@ -8,27 +8,26 @@ jobs:
     strategy:
       matrix:
         stack: [blueprint-golang]
+
     runs-on: ubuntu-latest
     steps:
 
-      ##
-      ## setup environment
-      - name: golang
-        uses: actions/setup-go@v2
+      - uses: actions/checkout@v2
+
+     - uses: peter-evans/create-issue-from-file@v4
+        id: spawn-release
+        with:
+          title: Spawn `${{ matrix.stack }}` release ${{ github.event.release.name }} to cloud 
+          content-filepath: ./.github/issue-spawn-release.md
+
+      - uses: actions/setup-go@v2
         with:
           go-version: 1.18
 
-      - name: checkout
-        uses: actions/checkout@v2
-
-      ##
-      ## fetch deps
       - name: go get tools
         run: |
           npm install -g aws-cdk
 
-      ##
-      ## deploys application to aws
       - name: aws access
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -50,4 +49,11 @@ jobs:
         id: discover
         run: |
           echo ::set-output name=target::$(jq -r '.["${{ matrix.stack }}-${{ github.event.release.name }}"] | to_entries | .[] | select(.key|test("GatewayEndpoint.*")) | .value ' < $GITHUB_WORKSPACE/stack.json)
+
+      - uses: peter-evans/close-issue@v2
+        with:
+          issue-number: ${{ steps.spawn-release.outputs.issue-number }}
+          comment: |
+            Release ${{ github.event.release.name }} of **${{ matrix.stack }}** is deployed to cloud environment:
+            - **url**: ${{ steps.discover.outputs.target }}
 

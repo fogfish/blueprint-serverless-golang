@@ -1,0 +1,28 @@
+"[#] ci/cd":
+ - '.github/*'
+ - '.github/**/*'
+
+"[#] deps":
+ - 'go.mod'
+ - 'go.sum'
+
+"[#] doc":
+ - '*.md'
+ - 'doc/*'
+ - 'doc/**/*'
+ - 'examples/**/*'
+
+"[#] cloud":
+ - 'cdk.json'
+ - 'cloud/*'
+ - 'cloud/**/*'
+
+"[#] core":
+ - '*.go'
+
+"[#] rest api":
+ - 'http/*'
+ - 'http/**/*'
+ - 'cmd/lambda/*'
+ - 'cmd/lambda/**/*'
+

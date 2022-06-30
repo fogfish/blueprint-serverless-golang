@@ -12,28 +12,22 @@ jobs:
     strategy:
       matrix:
         stack: [blueprint-golang]
+
+    if: github.event.label.name == '[A] deploy'
+
     runs-on: ubuntu-latest
-    if: github.event.label.name == '[@] deploy'
     steps:
 
-      ##
-      ## setup environment
-      - name: golang
-        uses: actions/setup-go@v2
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-go@v2
         with:
           go-version: 1.18
 
-      - name: checkout
-        uses: actions/checkout@v2
-
-      ##
-      ## fetches deps
       - name: go get tools
         run: |
           npm install -g aws-cdk
 
-      ##
-      ## deploys application to aws
       - name: aws access
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -56,14 +50,16 @@ jobs:
         run: |
           echo ::set-output name=target::$(jq -r '.["${{ matrix.stack }}-pr${{ github.event.number }}"] | to_entries | .[] | select(.key|test("GatewayEndpoint.*")) | .value ' < $GITHUB_WORKSPACE/stack.json)
 
-      - name: comment
-        uses: thollander/actions-comment-pull-request@v1
+      - uses: peter-evans/create-or-update-comment@v2
         with:
-          message: '**sandbox** #${{ github.event.number }} is spawned: ${{ steps.discover.outputs.target }}'
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          issue-number: ${{ github.event.number }}
+          body: |
+            Sandbox for **${{ matrix.stack }}** is deployed to cloud environment:
+            - **url**: ${{ steps.discover.outputs.target }}
+          reactions: rocket
 
       - uses: buildsville/add-remove-label@v1
         with:
           token: ${{secrets.GITHUB_TOKEN}}
-          label: '[@] deploy'
+          label: '[A] deploy'
           type: remove
