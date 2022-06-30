@@ -16,9 +16,9 @@ jobs:
 
       - uses: peter-evans/create-issue-from-file@v4
         id: spawn-release
-          with:
-            title: Release ${{ github.event.release.name }} of `${{ matrix.stack }}`  
-            content-filepath: ./.github/issue-spawn-release.md
+        with:
+          title: Release ${{ github.event.release.name }} of `${{ matrix.stack }}`  
+          content-filepath: ./.github/issue-spawn-release.md
 
       - uses: actions/setup-go@v2
         with:
