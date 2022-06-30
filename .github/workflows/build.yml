@@ -20,7 +20,7 @@ jobs:
       - uses: peter-evans/create-issue-from-file@v4
         id: spawn-latest
         with:
-          title: Spawn `${{ matrix.stack }}` latest commit to cloud 
+          title: Spawn `main` branch of `${{ matrix.stack }}` to cloud 
           content-filepath: ./.github/issue-spawn-latest.md
 
       - uses: actions/setup-go@v2
