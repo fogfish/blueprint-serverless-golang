@@ -170,23 +170,26 @@ cdk destroy
 
 Continuos Integration and Delivery is implemented using GitHub Actions. It consists of multiple [.github/workflows](.github/workflows).
 
+`AWS_ACCESS_KEY` and `AWS_SECRET_ACCESS_KEY` are required to enable deployment by GitHub Actions. Store these credentials to secret key vault at your fork settings (Your Fork > Settings > Secrets).
+
 ### Check quality of Pull Request
+
+The quality checks are executed every time a new change is proposed via Pull Request:
+* **checks** (`check-code.yml`) evaluates a quality of source code and reviews proposed changes (pull requests) using static code analysis.
+* **tests** (`check-test.yml`) the quality of software assets with scope on unit tests only and measures the test coverage.
+* **spawns** (`check-spawn.yml`) a sandbox(ed) deployment of the application to target AWS account for continuous integrations (optionally executed if pull request is marked with `[@] deploy` label);
+* **cleans** (`clean.yml`) sandbox environment after Pull Request is either merged or closed.
 
 ### Check quality of `main` branch
 
-* **check** (`check.yml`) the quality of software assets with scope on unit tests only. Checks are executed in parallel for application logic and infrastructure every time a new change is proposed via Pull Request.
+The quality checks are executed every time a pull request is merged into pipeline:
+* **tests** (`check-test.yml`) the quality of software assets with scope on unit tests only and measures the test coverage.
+* **builds** (`build.yml`) validates quality of `main` branch once Pull Request is merge by deploying changes to the development environment at target AWS account;
 
-* **tests** (`tests.yml`) unit + cov
+### Release of `main` branch
 
-* **spawns** (`spawn.yml`) a sandbox(ed) deployment of the application to target AWS account for continuous integrations;
-
-* **builds** (`build.yml`) validates quality of `main` branch once Pull Request is merge. Upon the quality check completion, the pipeline deploys changes to the development environment at target AWS account;
-
+The quality checks are executed every time a new release is created:
 * **carries** (`carry.yml`) "immutable" application snapshot to production environment when GitHub release is published;
-
-* **cleans** (`clean.yml`) sandbox environment after Pull Request is either merged or closed.
-
-`AWS_ACCESS_KEY` and `AWS_SECRET_ACCESS_KEY` are required to enable deployment by GitHub Actions. Store these credentials to secret key vault at your fork settings (Your Fork > Settings > Secrets).
 
 
 ## Customize Blueprint
@@ -199,7 +202,7 @@ Continuos Integration and Delivery is implemented using GitHub Actions. It consi
 stackID := fmt.Sprintf("blueprint-golang-%s", vsn(app))
 stack := awscdk.NewStack(app, jsii.String(stackID), config)
 ```
-- [ ] update the target stack name at CI/CD workflows [spawn.yml](.github/workflows/spawn.yml), [build.yml](.github/workflows/build.yml) and [carry.yml](.github/workflows/carry.yml)
+- [ ] update the target stack name at CI/CD workflows [check-spawn.yml](.github/workflows/check-spawn.yml), [build.yml](.github/workflows/build.yml), [carry.yml](.github/workflows/carry.yml) and [check-clean.yml](.github/workflows/check-clean.yml)
 ```yaml
 strategy:
       matrix:

@@ -1,7 +1,7 @@
 ##
 ## Unit Tests & Coverage
 ##
-name: tests
+name: test
 on:
   pull_request:
     types:
