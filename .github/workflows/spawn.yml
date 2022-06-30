@@ -57,7 +57,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - uses: peter-evans/create-or-update-comment@v2
-         with:
+        with:
           issue-number: ${{ github.event.number }}
           body: |
             Latest version of ${{ matrix.stack }} is deployed to cloud environment:
