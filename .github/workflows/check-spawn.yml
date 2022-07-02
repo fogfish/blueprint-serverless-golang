@@ -59,6 +59,7 @@ jobs:
           reactions: rocket
 
       - uses: buildsville/add-remove-label@v1
+        if: always()
         with:
           token: ${{secrets.GITHUB_TOKEN}}
           label: '[A] deploy'
