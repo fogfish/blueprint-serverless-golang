@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./doc/logo.gif" height="240" />
+  <img src="./doc/logo.gif" width="50%"  />
   <h3 align="center">Blueprint: Serverless Golang</h3>
   <p align="center"><strong>Skeleton of Golang serverless application built with AWS CDK</strong></p>
 
