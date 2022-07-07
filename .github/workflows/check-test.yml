@@ -37,6 +37,7 @@ jobs:
           ## GOPATH required to build serverless app inside unittest
           GOPATH: /home/runner/go
           GOCACHE: /home/runner/.cache/go-build
+          GOMODCACHE: /home/runner/go/pkg/mod
 
       - uses: shogo82148/actions-goveralls@v1
         continue-on-error: true
