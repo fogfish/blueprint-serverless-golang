@@ -30,21 +30,17 @@ jobs:
         run: |
           go build ./...
 
-      - name: go env
-        run: |
-          go env
-
       - name: go test
         run: |
           go test -v -coverprofile=profile.cov $(go list ./... | grep -v /examples/)
         env:
-          GOCACHE: "/home/runner/.cache/go-build"
-          GOENV: "/home/runner/.config/go/env"
-          GOMODCACHE: "/home/runner/go/pkg/mod"
-          GOPATH: "/home/runner/go"
-          GOROOT: "/opt/hostedtoolcache/go/1.18.3/x64"
-          GOTOOLDIR: "/opt/hostedtoolcache/go/1.18.3/x64/pkg/tool/linux_amd64"
-          GOMOD: "/home/runner/work/blueprint-serverless-golang/blueprint-serverless-golang/go.mod"
+          GOCACHE: ${{ env.GOCACHE }}
+          # GOENV: "/home/runner/.config/go/env"
+          # GOMODCACHE: "/home/runner/go/pkg/mod"
+          GOPATH: ${{ env.GOPATH }}
+          # GOROOT: "/opt/hostedtoolcache/go/1.18.3/x64"
+          # GOTOOLDIR: "/opt/hostedtoolcache/go/1.18.3/x64/pkg/tool/linux_amd64"
+          # GOMOD: "/home/runner/work/blueprint-serverless-golang/blueprint-serverless-golang/go.mod"
 
           ## GOPATH required to build serverless app inside unittest
           # GOPATH: ${{ steps.setup.outputs.GOPATH }}
