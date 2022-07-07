@@ -38,9 +38,18 @@ jobs:
         run: |
           go test -v -coverprofile=profile.cov $(go list ./... | grep -v /examples/)
         env:
+          GOCACHE: "/home/runner/.cache/go-build"
+          GOENV: "/home/runner/.config/go/env"
+          GOMODCACHE: "/home/runner/go/pkg/mod"
+          GOPATH: "/home/runner/go"
+          GOROOT: "/opt/hostedtoolcache/go/1.18.3/x64"
+          GOTOOLDIR: "/opt/hostedtoolcache/go/1.18.3/x64/pkg/tool/linux_amd64"
+          GOMOD: "/home/runner/work/blueprint-serverless-golang/blueprint-serverless-golang/go.mod"
+
           ## GOPATH required to build serverless app inside unittest
-          # GOPATH: ${{ steps.setup.outputs.GOPATH }} 
-          GOPATH: /home/runner/work/${{ github.event.repository.name }}/go
+          # GOPATH: ${{ steps.setup.outputs.GOPATH }}
+          # GOPATH: /home/runner/go 
+          # GOPATH: /home/runner/work/${{ github.event.repository.name }}/go
 
       - uses: shogo82148/actions-goveralls@v1
         continue-on-error: true
