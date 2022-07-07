@@ -23,6 +23,7 @@ jobs:
       - uses: actions/setup-go@v2
         with:
           go-version: 1.18
+          cache: true
 
       - name: go get tools
         run: |
@@ -41,7 +42,8 @@ jobs:
             -c vsn=pr${{ github.event.number }} \
             --outputs-file $GITHUB_WORKSPACE/stack.json
         env:
-          GOPATH: /home/runner/work/${{ github.event.repository.name }}/go
+          GOPATH: /home/runner/go
+          GOCACHE: /home/runner/.cache/go-build
 
       ##
       ## discover url of deployed api and runs api testing   
