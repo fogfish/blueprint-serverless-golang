@@ -19,7 +19,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
-      - uses: actions/setup-go@v2
+      - id: setup
+        uses: WillAbides/setup-go-faster@v1.7.0
         with:
           go-version: 1.18
 
@@ -33,8 +34,9 @@ jobs:
         run: |
           go test -v -coverprofile=profile.cov $(go list ./... | grep -v /examples/)
         env:
-          ## GOPATH required to build serverless app inside unittest 
-          GOPATH: /home/runner/work/${{ github.event.repository.name }}/go
+          ## GOPATH required to build serverless app inside unittest
+          GOPATH: ${{ steps.setup.outputs.GOPATH }} 
+          # GOPATH: /home/runner/work/${{ github.event.repository.name }}/go
 
       - uses: shogo82148/actions-goveralls@v1
         continue-on-error: true
