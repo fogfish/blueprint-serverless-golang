@@ -34,10 +34,11 @@ jobs:
         run: |
           go test -v -coverprofile=profile.cov $(go list ./... | grep -v /examples/)
         env:
-          GOCACHE: ${{ env.GOCACHE }}
+          # GOCACHE: ${{ env.GOCACHE }}
           # GOENV: "/home/runner/.config/go/env"
           # GOMODCACHE: "/home/runner/go/pkg/mod"
           GOPATH: ${{ env.GOPATH }}
+          GOROOT: ${{ env.GOROOT }}
           # GOROOT: "/opt/hostedtoolcache/go/1.18.3/x64"
           # GOTOOLDIR: "/opt/hostedtoolcache/go/1.18.3/x64/pkg/tool/linux_amd64"
           # GOMOD: "/home/runner/work/blueprint-serverless-golang/blueprint-serverless-golang/go.mod"
