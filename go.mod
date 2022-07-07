@@ -11,7 +11,7 @@ require (
 	github.com/fogfish/gouldian v1.6.0
 	github.com/fogfish/guid v1.0.0 // indirect
 	github.com/fogfish/it v0.9.1
-	github.com/fogfish/scud v0.4.15
+	github.com/fogfish/scud v0.4.16
 )
 
 require (

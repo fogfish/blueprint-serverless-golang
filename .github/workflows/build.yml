@@ -23,9 +23,10 @@ jobs:
           title: Spawn `main` branch of `${{ matrix.stack }}` to cloud 
           content-filepath: ./.github/issue-spawn-latest.md
 
-      - uses: actions/setup-go@v2
+      - uses: actions/setup-go@v3
         with:
           go-version: 1.18
+          cache: true
 
       - name: go get tools
         run: |
@@ -46,7 +47,9 @@ jobs:
             -c vsn=latest \
             --outputs-file $GITHUB_WORKSPACE/stack.json
         env:
-          GOPATH: /home/runner/work/${{ github.event.repository.name }}/go
+          GOPATH: /home/runner/go
+          GOCACHE: /home/runner/.cache/go-build
+          GOMODCACHE: /home/runner/go/pkg/mod
 
       ##
       ## discover url of deployed api and runs api testing   
