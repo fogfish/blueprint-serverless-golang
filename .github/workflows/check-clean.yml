@@ -11,60 +11,22 @@ jobs:
   it:
     strategy:
       matrix:
-        stack: [blueprint-golang]
+        stack:
+          - blueprint-golang
 
     runs-on: ubuntu-latest
     steps:
 
       - uses: actions/checkout@v2
 
-      - uses: peter-evans/create-issue-from-file@v4
-        id: clean-sandbox
-        with:
-          title: Clean up sandbox pr${{ github.event.number }} of `${{ matrix.stack }}` 
-          content-filepath: ./.github/issue-clean-sandbox.md
-
-      - uses: peter-evans/create-or-update-comment@v2
-        with:
-          issue-number: ${{ steps.clean-sandbox.outputs.issue-number }}
-          body: |
-            Destroying environment of #${{ github.event.number }}     
-
-      - uses: peter-evans/create-or-update-comment@v2
-        with:
-          issue-number: ${{ github.event.number }}
-          body: |
-            destroying with #${{ steps.clean-sandbox.outputs.issue-number }}     
-
-      - uses: actions/setup-go@v2
+      - uses: fogfish/deploy-cdk-go@latest
         with:
           go-version: 1.18
-
-      ##
-      ## fetch deps
-      - name: go get tools
-        run: |
-          npm install -g aws-cdk
-
-      ##
-      ## destroy application from aws
-      - name: aws access
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          command: destroy
+          stack: ${{ matrix.stack }}
+          version: pr${{ github.event.number }}
+          issue-to-comment: ${{ github.event.number }}
+          issue-to-create: ./.github/issue-clean-sandbox.md
+          aws-access-key: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: eu-west-1
-  
-      - name: cdk destroy
-        run: |
-          cdk destroy -f ${{ matrix.stack }}-pr${{ github.event.number }} \
-            -c vsn=pr${{ github.event.number }}
-        env:
-          GOPATH: /home/runner/work/${{ github.event.repository.name }}/go
-
-
-      - uses: peter-evans/close-issue@v2
-        with:
-          issue-number: ${{ steps.clean-sandbox.outputs.issue-number }}
-          comment: |
-            Sandbox #${{ github.event.number }} of **${{ matrix.stack }}** is destroyed.
