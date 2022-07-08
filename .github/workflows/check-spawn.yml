@@ -31,6 +31,7 @@ jobs:
           stack: ${{ matrix.stack }}
           version: pr${{ github.event.number }}
           issue-to-comment: ${{ github.event.number }}
+          issue-to-create: ./.github/issue-spawn-latest.md
           aws-access-key: ${{ secrets.AWS_ACCESS_KEY }}
           aws-secret-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
