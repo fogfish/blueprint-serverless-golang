@@ -39,6 +39,7 @@ jobs:
       - name: cdk deploy
         run: |
           cdk deploy ${{ matrix.stack }}-pr${{ github.event.number }} \
+            -o ${{ env.GOCACHE }}/cdk.out \
             -c vsn=pr${{ github.event.number }} \
             --outputs-file $GITHUB_WORKSPACE/stack.json
         env:
