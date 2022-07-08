@@ -23,6 +23,7 @@ jobs:
       - uses: fogfish/spawner-cdk@main
         with:
           go-version: 1.18
+          command: destroy
           stack: ${{ matrix.stack }}
           version: pr${{ github.event.number }}
           issue-to-comment: ${{ github.event.number }}
