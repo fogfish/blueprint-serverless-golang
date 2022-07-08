@@ -25,6 +25,13 @@ jobs:
           go-version: 1.18
           cache: true
 
+      - uses: actions/cache@v3
+        with:
+          path: $GITHUB_WORKSPACE/cdk.out
+          key: cdk-${{ runner.os }}-${{ env.cache-name }}-${{ matrix.stack }}-${{ hashFiles('**/manifest.json') }}
+          restore-keys: |
+            cdk-${{ runner.os }}-${{ env.cache-name }}-${{ matrix.stack }}-
+
       - name: go get tools
         run: |
           npm install -g aws-cdk
@@ -36,25 +43,15 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: eu-west-1
   
-      - name: deb
-        run: |
-          ls -alh /home/runner/.cache/go-build
-
       - name: cdk deploy
         run: |
           cdk deploy ${{ matrix.stack }}-pr${{ github.event.number }} \
-            -o ${{ env.GOCACHE }}/cdk.out \
             -c vsn=pr${{ github.event.number }} \
             --outputs-file $GITHUB_WORKSPACE/stack.json
         env:
           GOPATH: /home/runner/go
           GOCACHE: /home/runner/.cache/go-build
           GOMODCACHE: /home/runner/go/pkg/mod
-
-      - name: deb
-        run: |
-          ls -alh /home/runner/.cache/go-build
-          ls -alh /home/runner/.cache/go-build/cdk.out
 
       ##
       ## discover url of deployed api and runs api testing   
