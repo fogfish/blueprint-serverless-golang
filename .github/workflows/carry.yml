@@ -7,7 +7,8 @@ jobs:
   it:
     strategy:
       matrix:
-        stack: [blueprint-golang]
+        stack:
+          - blueprint-golang
 
     runs-on: ubuntu-latest
     steps:
