@@ -36,6 +36,11 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: eu-west-1
   
+      - name: deb
+        run: |
+          ls -alh /home/runner/.cache/go-build
+          ls -alh /home/runner/.cache/go-build/cdk.out
+
       - name: cdk deploy
         run: |
           cdk deploy ${{ matrix.stack }}-pr${{ github.event.number }} \
@@ -46,6 +51,11 @@ jobs:
           GOPATH: /home/runner/go
           GOCACHE: /home/runner/.cache/go-build
           GOMODCACHE: /home/runner/go/pkg/mod
+
+      - name: deb
+        run: |
+          ls -alh /home/runner/.cache/go-build
+          ls -alh /home/runner/.cache/go-build/cdk.out
 
       ##
       ## discover url of deployed api and runs api testing   
