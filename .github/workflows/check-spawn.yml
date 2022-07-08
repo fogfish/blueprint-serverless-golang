@@ -39,7 +39,6 @@ jobs:
       - name: deb
         run: |
           ls -alh /home/runner/.cache/go-build
-          ls -alh /home/runner/.cache/go-build/cdk.out
 
       - name: cdk deploy
         run: |
