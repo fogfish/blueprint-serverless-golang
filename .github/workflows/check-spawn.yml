@@ -28,9 +28,9 @@ jobs:
       - uses: actions/cache@v3
         with:
           path: ./cdk.out
-          key: ${{ matrix.stack }}-${{ runner.os }}-cdk-${{ hashFiles('**/manifest.json') }}
+          key: check-${{ matrix.stack }}-${{ runner.os }}-cdk-${{ hashFiles('**/manifest.json') }}
           restore-keys: |
-            ${{ matrix.stack }}-${{ runner.os }}-cdk-
+            check-${{ matrix.stack }}-${{ runner.os }}-cdk-
 
       - name: go get tools
         run: |
