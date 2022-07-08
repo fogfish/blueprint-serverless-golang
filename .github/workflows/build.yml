@@ -17,50 +17,12 @@ jobs:
 
       - uses: actions/checkout@v2
 
-      - uses: peter-evans/create-issue-from-file@v4
-        id: spawn-latest
-        with:
-          title: Spawn `main` branch of `${{ matrix.stack }}` to cloud 
-          content-filepath: ./.github/issue-spawn-latest.md
-
-      - uses: actions/setup-go@v3
+      - uses: fogfish/spawner-cdk@main
         with:
           go-version: 1.18
-          cache: true
-
-      - name: go get tools
-        run: |
-          npm install -g aws-cdk
-
-      ##
-      ## deploys application to aws
-      - name: aws access
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          stack: ${{ matrix.stack }}
+          version: latest
+          issue-to-create: ./.github/issue-spawn-latest.md
+          aws-access-key: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: eu-west-1
-
-      - name: cdk deploy
-        run: |
-          cdk deploy ${{ matrix.stack }}-latest \
-            -c vsn=latest \
-            --outputs-file $GITHUB_WORKSPACE/stack.json
-        env:
-          GOPATH: /home/runner/go
-          GOCACHE: /home/runner/.cache/go-build
-          GOMODCACHE: /home/runner/go/pkg/mod
-
-      ##
-      ## discover url of deployed api and runs api testing   
-      - name: discover
-        id: discover
-        run: |
-          echo ::set-output name=target::$(jq -r '.["${{ matrix.stack }}-latest"] | to_entries | .[] | select(.key|test("GatewayEndpoint.*")) | .value ' < $GITHUB_WORKSPACE/stack.json)
-
-      - uses: peter-evans/close-issue@v2
-        with:
-          issue-number: ${{ steps.spawn-latest.outputs.issue-number }}
-          comment: |
-            Latest version of **${{ matrix.stack }}** is deployed to cloud environment:
-            - **url**: ${{ steps.discover.outputs.target }}
