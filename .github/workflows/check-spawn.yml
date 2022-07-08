@@ -30,6 +30,7 @@ jobs:
         with:
           stack: ${{ matrix.stack }}
           version: pr${{ github.event.number }}
+          issue-to-comment: ${{ github.event.number }}
           aws-access-key: ${{ secrets.AWS_ACCESS_KEY }}
           aws-secret-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
