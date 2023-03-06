@@ -2,7 +2,8 @@ package http
 
 import (
 	scud "github.com/fogfish/blueprint-serverless-golang"
-	µ "github.com/fogfish/gouldian"
+	µ "github.com/fogfish/gouldian/v2"
+	ø "github.com/fogfish/gouldian/v2/output"
 )
 
 // ServiceScud is and example RESTfull Service
@@ -13,8 +14,8 @@ func (api ServiceScud) Lookup() µ.Routable {
 	return µ.GET(
 		µ.URI(µ.Path("scud")),
 		func(*µ.Context) error {
-			return µ.Status.OK(
-				µ.WithJSON(scud.NewStubs()),
+			return ø.Status.OK(
+				ø.Send(scud.NewStubs()),
 			)
 		},
 	)

@@ -4,8 +4,8 @@ import (
 	"testing"
 
 	"github.com/fogfish/blueprint-serverless-golang/http"
-	µ "github.com/fogfish/gouldian"
-	"github.com/fogfish/gouldian/mock"
+	"github.com/fogfish/gouldian/v2/mock"
+	ø "github.com/fogfish/gouldian/v2/output"
 	"github.com/fogfish/it"
 )
 
@@ -18,9 +18,11 @@ func TestLookup(t *testing.T) {
 	)
 
 	endpoint := mock.Endpoint(api.Lookup())
-	expect := µ.Status.OK(
-		µ.WithHeader("Content-Type", "application/json"),
-		µ.WithBytes([]byte(`[{"id":"a"},{"id":"b"},{"id":"c"}]`)),
+	expect := ø.Status.OK(
+		ø.ContentType.ApplicationJSON,
+		ø.Send([]struct {
+			ID string `json:"id"`
+		}{{ID: "a"}, {ID: "b"}, {ID: "c"}}),
 	)
 
 	it.Ok(t).
