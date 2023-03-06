@@ -13,7 +13,7 @@ var host = os.Getenv("INPUT_TARGET")
 // TestNews endpoint
 func TestNews() http.Arrow {
 	return http.GET(
-		ø.URI("%s/scud", host),
+		ø.URI(host+"/scud"),
 		ƒ.Status.OK,
 	)
 }
