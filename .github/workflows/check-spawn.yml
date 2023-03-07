@@ -35,7 +35,7 @@ jobs:
 
       - uses: assay-it/github-actions-check@latest
         with:
-          version: 1.0.4
+          verbose: true
           install-go: false
           system-under-test: ${{ steps.deploy.outputs.deployed-api }}
 
