@@ -24,7 +24,7 @@ func TestBlueprint(t *testing.T) {
 		jsii.String("Custom::LogRetention"):        jsii.Number(1),
 	}
 
-	template := assertions.Template_FromStack(stack)
+	template := assertions.Template_FromStack(stack, nil)
 	for key, val := range require {
 		template.ResourceCountIs(key, val)
 	}
