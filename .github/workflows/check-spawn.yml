@@ -35,7 +35,9 @@ jobs:
 
       - uses: assay-it/github-actions-check@latest
         with:
-          target: ${{ steps.deploy.outputs.deployed-api }}
+          version: 1.0.4
+          install-go: false
+          system-under-test: ${{ steps.deploy.outputs.deployed-api }}
 
       - uses: buildsville/add-remove-label@v1
         if: always()
