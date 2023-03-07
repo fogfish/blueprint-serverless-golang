@@ -30,8 +30,8 @@ github.com/fogfish/it v0.9.1/go.mod h1:NQJG4Ygvek85y7zGj0Gny8+6ygAnHjfBORhI7TdQh
 github.com/fogfish/it/v2 v2.0.1 h1:vu3kV2xzYDPHoMHMABxXeu5CoMcTfRc4gkWkzOUkRJY=
 github.com/fogfish/logger v1.1.0 h1:IZncrh4+Q7yyngcIq8lBr2VwcYE2huXcgCPKcT+zPOY=
 github.com/fogfish/logger v1.1.0/go.mod h1:o9Url3zZMjg87bOJKZTdWIX3aRmClY+3Ld97Jc2Podg=
-github.com/fogfish/scud v0.5.0 h1:OZxBlMek0aCIJwLoLgmuG6ZfP2ZEp7Tieoe9TjNUZrE=
-github.com/fogfish/scud v0.5.0/go.mod h1:GlQr4YH144e3iHgTK+7QlGOvi/UDvlaDu792Uei5niY=
+github.com/fogfish/scud v0.6.0 h1:sJsWAvvRcX4kRYYUXbOTw9hyZV+ax01TxpXlHKeTJGg=
+github.com/fogfish/scud v0.6.0/go.mod h1:7EH9GAGQK4oux9sTMhtSEfEVbism2ED+2gTb/UNFqvs=
 github.com/mattn/go-isatty v0.0.17 h1:BTarxUcIeDqL27Mc+vyvdWYSL28zpIhv3RoTdsLMPng=
 github.com/mattn/go-isatty v0.0.17/go.mod h1:kYGgaQfpe5nmfYZH+SKPsOc2e4SrIfOl2e/yFXSvRLM=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=

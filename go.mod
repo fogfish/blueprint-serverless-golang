@@ -10,7 +10,7 @@ require (
 	github.com/aws/jsii-runtime-go v1.77.0
 	github.com/fogfish/guid v1.1.0 // indirect
 	github.com/fogfish/it v0.9.1
-	github.com/fogfish/scud v0.5.0
+	github.com/fogfish/scud v0.6.0
 )
 
 require (
