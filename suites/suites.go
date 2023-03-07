@@ -8,8 +8,10 @@ import (
 
 // TestNews endpoint
 func TestNews() http.Arrow {
+	var data []byte
 	return http.GET(
 		ø.URI("/scud"),
 		ƒ.Status.OK,
+		ƒ.Bytes(&data),
 	)
 }
