@@ -1,4 +1,4 @@
-package scud
+package core
 
 // Stub is an example domain type
 type Stub struct {
