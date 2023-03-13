@@ -11,7 +11,6 @@ import (
 	"github.com/fogfish/scud"
 )
 
-//
 func vsn(app awscdk.App) string {
 	switch val := app.Node().TryGetContext(jsii.String("vsn")).(type) {
 	case string:
@@ -44,20 +43,19 @@ func main() {
 	app.Synth(nil)
 }
 
-//
 // NewBlueprint create example REST api
 func NewBlueprint(scope constructs.Construct) {
 	gateway := scud.NewGateway(scope, jsii.String("Gateway"),
 		&awsapigateway.RestApiProps{
-			RestApiName: jsii.String("scud"),
+			RestApiName: jsii.String("petshop"),
 		},
 	)
 
 	myfun := scud.NewFunctionGo(scope, jsii.String("MyFun"),
 		&scud.FunctionGoProps{
 			SourceCodePackage: "github.com/fogfish/blueprint-serverless-golang",
-			SourceCodeLambda:  "cmd/lambda/scud",
+			SourceCodeLambda:  "cmd/lambda/petshop",
 		},
 	)
-	gateway.AddResource("scud", myfun)
+	gateway.AddResource("petshop", myfun)
 }
