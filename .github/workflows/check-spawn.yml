@@ -36,7 +36,6 @@ jobs:
       - uses: assay-it/github-actions-quality-check@latest
         with:
           install-go: false
-          force-command: "eval"
           system-under-test: ${{ steps.deploy.outputs.deployed-api }}
 
       - uses: buildsville/add-remove-label@v1
