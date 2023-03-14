@@ -33,7 +33,7 @@ jobs:
           aws-secret-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: eu-west-1
 
-      - uses: assay-it/github-actions-test@latest
+      - uses: assay-it/github-actions-quality-check@latest
         with:
           install-go: false
           system-under-test: ${{ steps.deploy.outputs.deployed-api }}
