@@ -104,3 +104,58 @@ func TestPetShopListFailed(t *testing.T) {
 		),
 	)
 }
+
+func TestPetShopLookup(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mpf := mock.NewMockPetFetcher(ctrl)
+	mpf.EXPECT().LookupPet(
+		gomock.Any(),
+		gomock.Eq("A01"),
+	).Return(mock.Pets[0], nil)
+
+	service := http.NewPetShopAPI(mpf, nil)
+	httpd := µmock.Endpoint(service.Lookup())
+	yield := httpd(µmock.Input(
+		µmock.Method("GET"),
+		µmock.URL("/petshop/pets/A01"),
+		µmock.Header("Accept", "application/json"),
+	))
+
+	it.Then(t).Should(
+		it.Equiv(yield,
+			ø.Status.OK(
+				ø.ContentType.ApplicationJSON,
+				ø.Send(api.NewPet(mock.Pets[0])),
+			),
+		),
+	)
+}
+
+func TestPetShopCreate(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mpc := mock.NewMockPetCreator(ctrl)
+	mpc.EXPECT().CreatePet(
+		gomock.Any(),
+		gomock.Eq(mock.Pets[0]),
+	).Return(nil)
+
+	service := http.NewPetShopAPI(nil, mpc)
+	httpd := µmock.Endpoint(service.Create())
+	yield := httpd(µmock.Input(
+		µmock.Method("POST"),
+		µmock.URL("/petshop/pets"),
+		µmock.Header("Accept", "application/json"),
+		µmock.Header("Authorization", "Basic cGV0c3RvcmU6b3duZXIK"),
+		µmock.JSON(mock.Pets[0]),
+	))
+
+	it.Then(t).Should(
+		it.Equiv(yield,
+			ø.Status.Created(),
+		),
+	)
+}
