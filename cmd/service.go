@@ -3,9 +3,9 @@ package cmd
 import (
 	core "github.com/fogfish/blueprint-serverless-golang"
 	"github.com/fogfish/blueprint-serverless-golang/http"
-	"github.com/fogfish/blueprint-serverless-golang/internal/cache"
 	"github.com/fogfish/blueprint-serverless-golang/internal/mock"
 	"github.com/fogfish/blueprint-serverless-golang/internal/services/pets"
+	cache "github.com/fogfish/blueprint-serverless-golang/internal/storage"
 )
 
 func NewPetShopAPI() *http.PetShopAPI {

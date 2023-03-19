@@ -25,8 +25,8 @@ github.com/fogfish/gouldian/v2 v2.0.1 h1:7rAtSjv/31SRf+dROiTFmsF9UmQysSega54BFq5
 github.com/fogfish/gouldian/v2 v2.0.1/go.mod h1:m5lLg+DvIFucQ7rzFAWsZ5ZtIuSmnCNBoP3HY+Pncds=
 github.com/fogfish/guid/v2 v2.0.2 h1:apsRAnSTkft8izOvLipUstHtWYDmVum7kcunYTR5Kv8=
 github.com/fogfish/guid/v2 v2.0.2/go.mod h1:KkZ5T4EE3BqWQJFZBPLSHV/tBe23Xq4KvuPfwtNtepU=
-github.com/fogfish/gurl/v2 v2.4.0 h1:5ZJbf4HCB9QWCcPEKQ92HCSJG9SiCDfH20imm7p0r20=
-github.com/fogfish/gurl/v2 v2.4.0/go.mod h1:MMSAHe+Vo+EhJZ6iH1CYeKw64T11G/NAUPK0cZ2RyS4=
+github.com/fogfish/gurl/v2 v2.5.0 h1:S60X6w7mpPkiGL2kbBUgEh7U2o75hfKt5Bv3YnQxgtM=
+github.com/fogfish/gurl/v2 v2.5.0/go.mod h1:MMSAHe+Vo+EhJZ6iH1CYeKw64T11G/NAUPK0cZ2RyS4=
 github.com/fogfish/it v0.9.1/go.mod h1:NQJG4Ygvek85y7zGj0Gny8+6ygAnHjfBORhI7TdQhp4=
 github.com/fogfish/it v1.0.0 h1:kiwFHZcrkRLUydZoIoY0gTuMfj38trwvLo0YRyIkeG8=
 github.com/fogfish/it v1.0.0/go.mod h1:NQJG4Ygvek85y7zGj0Gny8+6ygAnHjfBORhI7TdQhp4=

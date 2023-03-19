@@ -1,5 +1,5 @@
 {
   "suites": [
-    "suites/petshop.go"
+    "http/suites/petshop.go"
   ]
 }
