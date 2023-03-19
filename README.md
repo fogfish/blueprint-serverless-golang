@@ -40,11 +40,12 @@ This project crafts a fully functional blueprint of Golang serverless RESTful ap
 
 [AWS CDK](https://aws.amazon.com/cdk) is amazing technology to automate the development and operation of application into one process and one codebase.
 
-However, seeding of new repository for development of Golang serverless application requires a boilerplate code. This blueprint helps you to focus on the application development than waste a time with establish project layout, configure AWS CDK, setting up CI/CD and figuring out how to testing the application. All these issues are resolved within this blueprint.
+However, seeding of new repository for development of Golang serverless application requires a boilerplate code. This blueprint helps you to focus on the application development than waste a time with establish **project layout**, **configure AWS CDK**, **setting up CI/CD** and figuring out how to **testing the application**. All these issues are resolved within this blueprint.
+
 
 ## Installation
 
-The blueprint is fully functional application that delivers a skeleton for Golang serverless development with AWS CDK. Clone the repository and follow [Getting started](#getting-started) instructions to evaluate its applicability for your purposes. It should take less than 5 minutes to build and deploy the template in AWS.
+The blueprint is fully functional application (Pet Store) that delivers a skeleton for Golang serverless development with AWS CDK. Clone the repository and follow [Getting started](#getting-started) instructions to evaluate its applicability for your purposes. It should take less than 5 minutes to build and deploy this blueprint to AWS.
 
 ```
 go get github.com/fogfish/blueprint-serverless-golang
@@ -75,57 +76,70 @@ git merge blueprint/main --allow-unrelated-histories --squash
 Before Getting started, you have to ensure
 
 * [Golang](https://golang.org/dl/) development environment v1.16 or later
-* [AWS CDK](https://docs.aws.amazon.com/cdk/latest/guide/work-with.html#work-with-prerequisites)
-* Access to AWS Account
+* [assay-it](https://assay.it) utility for testing cloud apps in production 
+* [AWS CDK](https://docs.aws.amazon.com/cdk/latest/guide/work-with.html#work-with-prerequisites) for deployment of serverless application using infrastructure as a code
+* [GitHub](https://github.com) account for managing source code and running CI/CD pipelines as [GitHub Actions](https://docs.github.com/en/actions)  
+* Account on [Amazon Web Services](https://aws.amazon.com) for running the application in production 
 
 
 ## Getting started
 
 **Let's have a look on the repository structure**
 
-The structure resembles the standard package layout proposed in [this blog post](https://medium.com/@benbjohnson/standard-package-layout-7cdbc8391fc1):
+The structure resembles the mixture of [Standard package layout](https://medium.com/@benbjohnson/standard-package-layout-7cdbc8391fc1) and [Hexagonal architecture](https://medium.com/@matiasvarela/hexagonal-architecture-in-go-cfd4e436faa3). The proposed structure is better version of Hexagonal architecture that follows Golang best practices:
 
 1. the root package contains core types to describe domain of your application. It contains simple types that has no dependency to technology but their implements core logic and use-cases.
 
-2. Use sub-packages to isolate dependencies to external technologies so that they act as bridge between your domain and technology adaptation. 
+2. Use sub-packages to isolate dependencies to external technologies so that they act as bridge between your domain and technology adaptation.
 
 3. Main packages build lambda functions and ties everything together.
 
 ```
 github.com/.../the-beautiful-app  
-  ├─ stub.go                     // domain types, unit test
-  ├─ ...                         // "algebra" of your application
-  |
-  ├─ http                        // RESTful API and HTTP protocol
-  |    ├─ api.go                 // api endpoint(s), unit tests,
-  |    └─ ...                    // other endpoints
-  |
-  ├─ cmd                         // executables of the project
-  |    └─ lambda                 // aws lambda's are main packages
-  |         ├─ scud              // each lambda stays at own executable
-  |         |    └─ main.go
-  |         └─ ...
-  |
-  ├─ cloud                       // IaC, aws cdk application
-  |    └─ ...                    // orchestrate ops model
-  |
-  ├─ .github                     // CI/CD with GitHub Actions
-  |      └─ ...                   
-  |
-  └─ suite                       // API testing suite 
-       ├─ api.go                 // (disabled in this release)
-       └─ ... 
+├─ pet.go                      // the root defines domain types, unit test
+├─ ...                         // "algebra" of your application
+|
+├─ storage.go                  // defines capability requires to store core
+|                              // objects at the external storage, hex-arch
+|                              // use "port" concept to depict it          
+|
+├─ internal/storage            // sub-package for dependency/technology ...
+|                              // it follows the standard package layout to 
+|                              // adapt domain/implementation/dependency.
+|                              // in this example storage implements in-memory
+|                              // database for all domain objects.  
+|
+├─ internal/services           // entry point to the core, implement app logic
+|  └─ pets                     // entire logic about pets domain
+|     ├─ fetcher.go            // fetch and enrich pets objects 
+|     └─ creator.go            // create pets objects
+|
+├─ internal/mock               // shared mock
+|
+├─ http                        // public REST API exposed by application.
+|  ├─ petshop.go               // collection of petshop endpoints impl. by app
+|  |                           // endpoints consumer services using ports    
+|  | 
+|  ├─ api                      // public objects used by API
+|  |  └─ pet.go
+|  └─ suites                   // testing suites for api endpoint(s)
+|
+├─ cmd                         // executables of the project
+|  ├─ lambda                   // aws lambda's are main packages
+|  |  ├─ petshop               // each lambda stays at own executable
+|  |  |  └─ main.go            // single lambda pattern is not recommended
+|  | ...
+|  └─ server                   // run application as standalone server 
+|     └─ main.go
+|
+├─ cloud                       // IaC, aws cdk application
+|  └─ ...                      // orchestrate ops model
+|
+└─ .github                     // CI/CD with GitHub Actions
+    └─ ...                   
 ```
 
 ### Development workflows
-
-**dependencies** 
-
-The application requires 3rd party libraries for dev and opts. Fetch them with the following commands:
-
-```bash
-go get -d ./...
-```
 
 **unit testing**
 
@@ -133,6 +147,15 @@ Test the Golang application and its cloud infrastructure
 
 ```bash
 go test ./...
+```
+
+**local testing**
+
+Run application locally
+
+```bash
+go run cmd/server/main.go
+assay-it test --target http://127.1:8080
 ```
 
 **build**
@@ -154,8 +177,15 @@ cdk deploy
 In few seconds, the application becomes available at
 
 ```
-curl https://xxxxxxxxxx.execute-api.eu-west-1.amazonaws.com/api/scud
+curl https://xxxxxxxxxx.execute-api.eu-west-1.amazonaws.com/api
 ```
+
+**test in production**
+
+```bash
+assay-it test --target https://xxxxxxxxxx.execute-api.eu-west-1.amazonaws.com/api
+```
+
 
 **destroy**
 

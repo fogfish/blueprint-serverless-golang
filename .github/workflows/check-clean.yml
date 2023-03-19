@@ -21,7 +21,7 @@ jobs:
 
       - uses: fogfish/deploy-cdk-go@latest
         with:
-          go-version: 1.18
+          go-version: "1.20"
           command: destroy
           stack: ${{ matrix.stack }}
           version: pr${{ github.event.number }}
