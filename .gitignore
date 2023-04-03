@@ -17,4 +17,4 @@
 node_modules/
 .vscode/
 
-suites/assay-it/
+assay-it/
