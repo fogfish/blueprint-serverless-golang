@@ -6,18 +6,18 @@ import (
 	"sync"
 
 	"github.com/fogfish/skiplist"
-	"github.com/fogfish/skiplist/ord"
+	// "github.com/fogfish/skiplist/ord"
 )
 
-type Cache[K ord.Comparable, V any] struct {
+type Cache[K skiplist.Key, V any] struct {
 	lock  *sync.Mutex
-	store *skiplist.SkipList[K, V]
+	store *skiplist.Map[K, V]
 }
 
-func New[K ord.Comparable, V any]() *Cache[K, V] {
+func New[K skiplist.Key, V any]() *Cache[K, V] {
 	return &Cache[K, V]{
 		lock:  &sync.Mutex{},
-		store: skiplist.New[K, V](ord.Type[K]()),
+		store: skiplist.NewMap[K, V](),
 	}
 }
 
@@ -25,8 +25,8 @@ func (cache *Cache[K, V]) Get(_ context.Context, key K) (V, error) {
 	cache.lock.Lock()
 	defer cache.lock.Unlock()
 
-	val, has := skiplist.Lookup(cache.store, key)
-	if !has {
+	val, pair := cache.store.Get(key)
+	if pair == nil {
 		return val, errNotFound(fmt.Sprintf("%v", key))
 	}
 
@@ -39,18 +39,10 @@ func (cache *Cache[K, V]) Seq(_ context.Context, afterKey K, size int) ([]V, err
 
 	seq := make([]V, 0)
 
-	_, tail := skiplist.Split(cache.store, afterKey)
-	if tail == nil {
-		return seq, nil
-	}
-
-	for tail.Next() {
-		_, val := tail.Head()
-		seq = append(seq, val)
-
-		if len(seq) == size {
-			return seq, nil
-		}
+	_, pair := cache.store.Get(afterKey)
+	e := skiplist.ForMap(cache.store, pair)
+	for has := e != nil; has; has = e.Next() {
+		seq = append(seq, e.Value())
 	}
 
 	return seq, nil
@@ -60,7 +52,7 @@ func (cache *Cache[K, V]) Set(_ context.Context, key K, val V) error {
 	cache.lock.Lock()
 	defer cache.lock.Unlock()
 
-	skiplist.Put(cache.store, key, val)
+	cache.store.Put(key, val)
 	return nil
 }
 
