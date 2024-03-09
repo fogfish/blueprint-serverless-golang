@@ -45,20 +45,6 @@ func (cache *Cache[K, V]) Seq(_ context.Context, afterKey K, size int) ([]V, err
 		seq = append(seq, e.Value())
 	}
 
-	// _, tail := skiplist.Split(cache.store, afterKey)
-	// if tail == nil {
-	// 	return seq, nil
-	// }
-
-	// for tail.Next() {
-	// 	_, val := tail.Head()
-	// 	seq = append(seq, val)
-
-	// 	if len(seq) == size {
-	// 		return seq, nil
-	// 	}
-	// }
-
 	return seq, nil
 }
 
