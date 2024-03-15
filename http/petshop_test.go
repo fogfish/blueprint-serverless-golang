@@ -149,7 +149,7 @@ func TestPetShopCreate(t *testing.T) {
 		µmock.Method("POST"),
 		µmock.URL("/petshop/pets"),
 		µmock.Header("Accept", "application/json"),
-		µmock.Header("Authorization", "Basic cGV0c3RvcmU6b3duZXIK"),
+		µmock.Header("X-Secret-Code", "cGV0c3RvcmU6b3duZXIK"),
 		µmock.JSON(mock.Pets[0]),
 	))
 
