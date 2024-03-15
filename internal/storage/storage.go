@@ -39,7 +39,8 @@ func (cache *Cache[K, V]) Seq(_ context.Context, afterKey K, size int) ([]V, err
 
 	seq := make([]V, 0)
 
-	_, pair := cache.store.Get(afterKey)
+	pair, _ := cache.store.Skip(0, afterKey)
+
 	e := skiplist.ForMap(cache.store, pair)
 	for has := e != nil; has; has = e.Next() {
 		seq = append(seq, e.Value())

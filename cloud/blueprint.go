@@ -5,7 +5,7 @@ import (
 	"os"
 
 	"github.com/aws/aws-cdk-go/awscdk/v2"
-	"github.com/aws/aws-cdk-go/awscdk/v2/awsapigateway"
+	"github.com/aws/aws-cdk-go/awscdk/v2/awsapigatewayv2"
 	"github.com/aws/constructs-go/constructs/v10"
 	"github.com/aws/jsii-runtime-go"
 	"github.com/fogfish/scud"
@@ -35,8 +35,11 @@ func main() {
 	//
 	// Stack
 	//
-	stackID := fmt.Sprintf("blueprint-golang-%s", vsn(app))
-	stack := awscdk.NewStack(app, jsii.String(stackID), config)
+	vsn := vsn(app)
+	stack := awscdk.NewStack(app,
+		jsii.String(fmt.Sprintf("blueprint-golang-%s", vsn)),
+		config,
+	)
 
 	NewBlueprint(stack)
 
@@ -46,16 +49,17 @@ func main() {
 // NewBlueprint create example REST api
 func NewBlueprint(scope constructs.Construct) {
 	gateway := scud.NewGateway(scope, jsii.String("Gateway"),
-		&awsapigateway.RestApiProps{
-			RestApiName: jsii.String("petshop"),
+		&scud.GatewayProps{
+			HttpApiProps: &awsapigatewayv2.HttpApiProps{},
 		},
 	)
+	gateway.WithAuthorizerIAM()
 
-	myfun := scud.NewFunctionGo(scope, jsii.String("MyFun"),
+	handler := scud.NewFunctionGo(scope, jsii.String("Handler"),
 		&scud.FunctionGoProps{
 			SourceCodePackage: "github.com/fogfish/blueprint-serverless-golang",
 			SourceCodeLambda:  "cmd/lambda/petshop",
 		},
 	)
-	gateway.AddResource("petshop", myfun)
+	gateway.AddResource("/petshop", handler)
 }

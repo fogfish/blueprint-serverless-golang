@@ -12,7 +12,6 @@ import (
 )
 
 //go:generate mockgen -destination ../mock/petshop.go -package mock . PetFetcher,PetCreator
-
 type PetFetcher interface {
 	LookupPet(context.Context, core.Identity) (core.Pet, error)
 	LookupPetsAfterKey(context.Context, core.Identity, int) ([]core.Pet, error)
@@ -60,7 +59,6 @@ func (shop PetShopAPI) List() µ.Routable {
 				pets := api.NewPets(petSeqN, seq)
 				return ø.Status.OK(
 					ø.ContentType.ApplicationJSON,
-					// ø.L
 					ø.Send(pets),
 				)
 			default:

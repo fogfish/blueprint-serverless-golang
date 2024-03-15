@@ -18,3 +18,5 @@ node_modules/
 .vscode/
 
 assay-it/
+
+cdk.context.json

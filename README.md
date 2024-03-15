@@ -122,6 +122,8 @@ github.com/.../the-beautiful-app
 |  | 
 |  ├─ api                      // public objects used by API
 |  |  └─ pet.go
+|  ├─ curl                     // client library
+|  |  └─ petshop.go
 |  └─ suites                   // testing suites for api endpoint(s)
 |
 ├─ cmd                         // executables of the project
@@ -176,9 +178,23 @@ cdk deploy
 
 In few seconds, the application becomes available at
 
-```
+```bash
 curl https://xxxxxxxxxx.execute-api.eu-west-1.amazonaws.com/api
 ```
+
+The api is protected by AWS IAM, request has to be signed.
+Either use example client `cmd/petshop-cli` or curl directly
+
+```bash
+curl $BLUEPRINT/petshop/pets \
+  -XGET \
+  -H "Accept: application/json" \
+  --aws-sigv4 "aws:amz:eu-west-1:execute-api" \
+  --user "$AWS_ACCESS_KEY_ID":"$AWS_SECRET_ACCESS_KEY"
+```
+
+See [all available endpoints](./http/petshop.go). 
+
 
 **test in production**
 
