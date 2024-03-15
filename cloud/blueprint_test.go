@@ -15,13 +15,12 @@ func TestBlueprint(t *testing.T) {
 	NewBlueprint(stack)
 
 	require := map[*string]*float64{
-		jsii.String("AWS::ApiGateway::RestApi"):    jsii.Number(1),
-		jsii.String("AWS::ApiGateway::Deployment"): jsii.Number(1),
-		jsii.String("AWS::ApiGateway::Stage"):      jsii.Number(1),
-		jsii.String("AWS::ApiGateway::Method"):     jsii.Number(5),
-		jsii.String("AWS::IAM::Role"):              jsii.Number(3),
-		jsii.String("AWS::Lambda::Function"):       jsii.Number(2),
-		jsii.String("Custom::LogRetention"):        jsii.Number(1),
+		jsii.String("AWS::ApiGatewayV2::Api"):   jsii.Number(1),
+		jsii.String("AWS::ApiGatewayV2::Stage"): jsii.Number(2),
+		jsii.String("AWS::ApiGatewayV2::Route"): jsii.Number(1),
+		jsii.String("AWS::IAM::Role"):           jsii.Number(2),
+		jsii.String("AWS::Lambda::Function"):    jsii.Number(2),
+		jsii.String("Custom::LogRetention"):     jsii.Number(1),
 	}
 
 	template := assertions.Template_FromStack(stack, nil)

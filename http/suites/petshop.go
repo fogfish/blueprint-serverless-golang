@@ -39,7 +39,7 @@ func TestPetShopLookup() http.Arrow {
 func TestPetShopCreate() http.Arrow {
 	return http.POST(
 		ø.URI("/petshop/pets"),
-		ø.Authorization.Set("Basic cGV0c3RvcmU6b3duZXIK"),
+		ø.Header("X-Secret-Code", "Basic cGV0c3RvcmU6b3duZXIK"),
 		ø.ContentType.ApplicationJSON,
 		ø.Send(mock.Pets[16]),
 		ƒ.Status.Created,
