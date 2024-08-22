@@ -3,7 +3,7 @@ package mock
 import (
 	"context"
 
-	core "github.com/fogfish/blueprint-serverless-golang"
+	"github.com/fogfish/blueprint-serverless-golang/internal/core"
 )
 
 var Pets = []core.Pet{
