@@ -88,18 +88,26 @@ Before Getting started, you have to ensure
 
 The structure resembles the mixture of [Standard package layout](https://medium.com/@benbjohnson/standard-package-layout-7cdbc8391fc1) and [Hexagonal architecture](https://medium.com/@matiasvarela/hexagonal-architecture-in-go-cfd4e436faa3). The proposed structure is better version of Hexagonal architecture that follows Golang best practices:
 
-1. the root package contains core types to describe domain of your application. It contains simple types that has no dependency to technology but their implements core logic and use-cases.
+1. the root is aws cdk application
+    
+2. Sub-packages to isolate dependencies to external technologies so that they act as bridge between your domain and technology adaptation. `internal` holds sub-packages internal to applications. `pkg` are sharable clients
 
-2. Use sub-packages to isolate dependencies to external technologies so that they act as bridge between your domain and technology adaptation.
-
-3. Main packages build lambda functions and ties everything together.
+4. `cmd` contains main packages that build lambda functions and ties everything together.
 
 ```
-github.com/.../the-beautiful-app  
-├─ pet.go                      // the root defines domain types, unit test
-├─ ...                         // "algebra" of your application
+github.com/.../the-beautiful-app
+├─ petshop.go                  // aws cdk main application  
 |
-├─ storage.go                  // defines capability requires to store core
+├─ internal/awspetshop         // IaC, aws cdk application
+|
+├─ internal/core               // the root defines domain types, unit test 
+|  |                           // "algebra" of your application. contains core
+|  |                           // types to describe domain of your application.
+|  |                           // It contains simple types that has no dependency
+|  |                           // to technology but their implements core logic
+|  |                           // and use-cases.
+|  |
+|  └─ storage.go               // defines capability requires to store core
 |                              // objects at the external storage, hex-arch
 |                              // use "port" concept to depict it          
 |
@@ -116,14 +124,10 @@ github.com/.../the-beautiful-app
 |
 ├─ internal/mock               // shared mock
 |
-├─ http                        // public REST API exposed by application.
+├─ internal/http               // public REST API exposed by application.
 |  ├─ petshop.go               // collection of petshop endpoints impl. by app
 |  |                           // endpoints consumer services using ports    
 |  | 
-|  ├─ api                      // public objects used by API
-|  |  └─ pet.go
-|  ├─ curl                     // client library
-|  |  └─ petshop.go
 |  └─ suites                   // testing suites for api endpoint(s)
 |
 ├─ cmd                         // executables of the project
@@ -134,8 +138,8 @@ github.com/.../the-beautiful-app
 |  └─ server                   // run application as standalone server 
 |     └─ main.go
 |
-├─ cloud                       // IaC, aws cdk application
-|  └─ ...                      // orchestrate ops model
+├─ pkg/api                     // public domain objects used by application
+|                              // client library
 |
 └─ .github                     // CI/CD with GitHub Actions
     └─ ...                   
@@ -182,7 +186,7 @@ In few seconds, the application becomes available at
 curl https://xxxxxxxxxx.execute-api.eu-west-1.amazonaws.com/api
 ```
 
-The api is protected by AWS IAM, request has to be signed.
+The write path of api is protected by AWS IAM, request has to be signed.
 Either use example client `cmd/petshop-cli` or curl directly
 
 ```bash

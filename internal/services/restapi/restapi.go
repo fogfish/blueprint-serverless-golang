@@ -1,8 +1,8 @@
-package cmd
+package restapi
 
 import (
-	core "github.com/fogfish/blueprint-serverless-golang"
-	"github.com/fogfish/blueprint-serverless-golang/http"
+	"github.com/fogfish/blueprint-serverless-golang/internal/core"
+	"github.com/fogfish/blueprint-serverless-golang/internal/http"
 	"github.com/fogfish/blueprint-serverless-golang/internal/mock"
 	"github.com/fogfish/blueprint-serverless-golang/internal/services/pets"
 	cache "github.com/fogfish/blueprint-serverless-golang/internal/storage"

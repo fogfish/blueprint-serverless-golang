@@ -3,8 +3,8 @@ package http
 import (
 	"context"
 
-	core "github.com/fogfish/blueprint-serverless-golang"
-	"github.com/fogfish/blueprint-serverless-golang/http/api"
+	"github.com/fogfish/blueprint-serverless-golang/internal/core"
+	"github.com/fogfish/blueprint-serverless-golang/pkg/api"
 	"github.com/fogfish/faults"
 	µ "github.com/fogfish/gouldian/v2"
 	ø "github.com/fogfish/gouldian/v2/output"
@@ -41,17 +41,22 @@ type reqPetShop struct {
 var (
 	reqID   = µ.Optics1[reqPetShop, schemaorg.Identifier]()
 	reqPet  = µ.Optics1[reqPetShop, api.Pet]()
-	petshop = µ.Path("petshop")
-	pets    = µ.Path("pets")
+	console = µ.Path(core.CONSOLE)
+	petshop = µ.Path(core.PETSHOP)
+	pets    = µ.Path(core.PETS)
 	petID   = µ.Path(reqID)
 	petSeqN = 3
+	accept  = µ.Or(
+		µ.Accept.ApplicationJSON,
+		µ.Accept.Is("*/*"),
+	)
 )
 
 func (shop PetShopAPI) List() µ.Routable {
 	return µ.GET(
 		µ.URI(petshop, pets),
 		µ.ParamMaybe("cursor", reqID),
-		µ.Accept.ApplicationJSON,
+		accept,
 		µ.FMap(func(ctx *µ.Context, req *reqPetShop) error {
 			seq, err := shop.fetcher.LookupPetsAfterKey(ctx, string(req.ID), petSeqN+1)
 			switch {
@@ -70,8 +75,7 @@ func (shop PetShopAPI) List() µ.Routable {
 
 func (shop PetShopAPI) Create() µ.Routable {
 	return µ.POST(
-		µ.URI(petshop, pets),
-		AllowSecretCode(),
+		µ.URI(console, petshop, pets),
 		µ.ContentType.ApplicationJSON,
 		µ.Body(reqPet),
 		µ.FMap(func(ctx *µ.Context, req *reqPetShop) error {
@@ -90,7 +94,7 @@ func (shop PetShopAPI) Create() µ.Routable {
 func (shop PetShopAPI) Lookup() µ.Routable {
 	return µ.GET(
 		µ.URI(petshop, pets, petID),
-		µ.Accept.ApplicationJSON,
+		accept,
 		µ.FMap(func(ctx *µ.Context, req *reqPetShop) error {
 			pet, err := shop.fetcher.LookupPet(ctx, string(req.ID))
 			switch {

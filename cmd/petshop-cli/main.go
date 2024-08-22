@@ -7,24 +7,26 @@ import (
 	"os"
 
 	"github.com/aws/aws-sdk-go-v2/config"
-	"github.com/fogfish/blueprint-serverless-golang/http/curl"
+	"github.com/fogfish/blueprint-serverless-golang/pkg/api"
 	"github.com/fogfish/gurl/awsapi"
 	"github.com/fogfish/gurl/v2/http"
 )
 
-// go run main.go https://XXXXXXXXXX.execute-api.eu-west-1.amazonaws.com
 func main() {
-	fmt.Println(os.Args)
-
-	cfg, err := config.LoadDefaultConfig(context.Background())
-	if err != nil {
-		panic(err)
+	if len(os.Args) == 1 {
+		fmt.Printf("petshop-cli https://XXXXXXXXXX.execute-api.eu-west-1.amazonaws.com [pet.json]\n")
 	}
 
-	curl := curl.NewPetShop(
-		http.New(awsapi.WithSignatureV4(cfg)),
-		os.Args[1],
-	)
+	host := os.Args[1]
+	if len(os.Args) == 3 {
+		create(host, os.Args[2])
+	} else {
+		list(host)
+	}
+}
+
+func list(host string) {
+	curl := api.NewPetShop(http.New(), host)
 
 	pets, err := curl.List(context.Background())
 	if err != nil {
@@ -32,7 +34,7 @@ func main() {
 	}
 	output(pets)
 
-	if pets.Next != nil {
+	for pets.Next != nil && len(*pets.Next) != 0 {
 		pets, err = curl.Continue(context.Background(), *pets.Next)
 		if err != nil {
 			panic(err)
@@ -47,6 +49,37 @@ func main() {
 		}
 		output(pet)
 	}
+}
+
+func create(host string, file string) {
+	var pet api.Pet
+
+	fd, err := os.Open(file)
+	if err != nil {
+		panic(err)
+	}
+	defer fd.Close()
+
+	if err := json.NewDecoder(fd).Decode(&pet); err != nil {
+		panic(err)
+	}
+
+	cfg, err := config.LoadDefaultConfig(context.Background())
+	if err != nil {
+		panic(err)
+	}
+
+	curl := api.NewPetShop(
+		http.New(awsapi.WithSignatureV4(cfg)),
+		host,
+	)
+
+	if err := curl.Create(context.Background(), &pet); err != nil {
+		panic(err)
+	}
+
+	fmt.Printf("==> pet created\n")
+	output(pet)
 }
 
 func output(x any) {

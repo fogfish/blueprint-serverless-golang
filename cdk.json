@@ -1,5 +1,5 @@
 {
-  "app": "go mod download && go run cloud/blueprint.go",
+  "app": "go mod download && go run petshop.go",
   "requireApproval": "never",
   "context": {
     "@aws-cdk/aws-apigateway:usagePlanKeyOrderInsensitiveId": true,

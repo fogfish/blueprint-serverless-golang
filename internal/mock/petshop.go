@@ -8,7 +8,7 @@ import (
 	context "context"
 	reflect "reflect"
 
-	core "github.com/fogfish/blueprint-serverless-golang"
+	"github.com/fogfish/blueprint-serverless-golang/internal/core"
 	gomock "github.com/golang/mock/gomock"
 )
 

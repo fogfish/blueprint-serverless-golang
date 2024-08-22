@@ -3,7 +3,7 @@ package pets
 import (
 	"context"
 
-	core "github.com/fogfish/blueprint-serverless-golang"
+	"github.com/fogfish/blueprint-serverless-golang/internal/core"
 	"github.com/fogfish/faults"
 )
 

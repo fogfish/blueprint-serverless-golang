@@ -1,8 +1,9 @@
 package suites
 
 import (
-	"github.com/fogfish/blueprint-serverless-golang/http/api"
+	"github.com/fogfish/blueprint-serverless-golang/internal/core"
 	"github.com/fogfish/blueprint-serverless-golang/internal/mock"
+	"github.com/fogfish/blueprint-serverless-golang/pkg/api"
 	"github.com/fogfish/gurl/v2/http"
 	ƒ "github.com/fogfish/gurl/v2/http/recv"
 	ø "github.com/fogfish/gurl/v2/http/send"
@@ -10,7 +11,7 @@ import (
 
 func TestPetShopList() http.Arrow {
 	return http.GET(
-		ø.URI("/petshop/pets"),
+		ø.URI("/%s/%s", core.PETSHOP, core.PETS),
 		ø.Accept.ApplicationJSON,
 		ƒ.Status.OK,
 		ƒ.Expect(api.NewPets(3, mock.Pets[0:4])),
@@ -19,7 +20,7 @@ func TestPetShopList() http.Arrow {
 
 func TestPetShopListWithCursor() http.Arrow {
 	return http.GET(
-		ø.URI("/petshop/pets"),
+		ø.URI("/%s/%s", core.PETSHOP, core.PETS),
 		ø.Param("cursor", mock.Pets[4].ID),
 		ø.Accept.ApplicationJSON,
 		ƒ.Status.OK,
@@ -29,7 +30,7 @@ func TestPetShopListWithCursor() http.Arrow {
 
 func TestPetShopLookup() http.Arrow {
 	return http.GET(
-		ø.URI("/petshop/pets/"+mock.Pets[16].ID),
+		ø.URI("/%s/%s/%s", core.PETSHOP, core.PETS, mock.Pets[16].ID),
 		ø.Accept.ApplicationJSON,
 		ƒ.Status.OK,
 		ƒ.Expect(api.NewPet(mock.Pets[16])),
@@ -38,8 +39,7 @@ func TestPetShopLookup() http.Arrow {
 
 func TestPetShopCreate() http.Arrow {
 	return http.POST(
-		ø.URI("/petshop/pets"),
-		ø.Header("X-Secret-Code", "Basic cGV0c3RvcmU6b3duZXIK"),
+		ø.URI("/%s/%s/%s", core.CONSOLE, core.PETSHOP, core.PETS),
 		ø.ContentType.ApplicationJSON,
 		ø.Send(mock.Pets[16]),
 		ƒ.Status.Created,
@@ -48,7 +48,7 @@ func TestPetShopCreate() http.Arrow {
 
 func TestPetShopCreateUnauthorized() http.Arrow {
 	return http.POST(
-		ø.URI("/petshop/pets"),
+		ø.URI("/%s/%s", core.PETSHOP, core.PETS),
 		ø.ContentType.ApplicationJSON,
 		ø.Send(mock.Pets[16]),
 		ƒ.Status.Unauthorized,

@@ -3,7 +3,7 @@ package core_test
 import (
 	"testing"
 
-	core "github.com/fogfish/blueprint-serverless-golang"
+	"github.com/fogfish/blueprint-serverless-golang/internal/core"
 	"github.com/fogfish/it/v2"
 )
 

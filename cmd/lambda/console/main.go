@@ -1,20 +1,17 @@
 package main
 
 import (
-	server "net/http"
-
+	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/fogfish/blueprint-serverless-golang/internal/services/restapi"
-	"github.com/fogfish/gouldian/v2/server/httpd"
+	httpd "github.com/fogfish/gouldian/v2/server/aws/apigateway"
 )
 
 func main() {
 	api := restapi.NewPetShopAPI()
 
-	server.ListenAndServe(":8080",
+	lambda.Start(
 		httpd.Serve(
-			api.List(),
 			api.Create(),
-			api.Lookup(),
 		),
 	)
 }

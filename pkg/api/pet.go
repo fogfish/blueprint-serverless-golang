@@ -2,8 +2,9 @@ package api
 
 import (
 	"fmt"
+	"path/filepath"
 
-	core "github.com/fogfish/blueprint-serverless-golang"
+	"github.com/fogfish/blueprint-serverless-golang/internal/core"
 	"github.com/fogfish/schemaorg"
 )
 
@@ -27,7 +28,7 @@ func NewPet(pet core.Pet) Pet {
 		ID:       schemaorg.Identifier(pet.ID),
 		Category: schemaorg.Category(pet.Category),
 		Price:    schemaorg.Price(pet.Price),
-		Url:      schemaorg.Url(fmt.Sprintf("/petshop/pets/%s", pet.ID)),
+		Url:      schemaorg.Url(filepath.Join("/", core.PETSHOP, core.PETS, pet.ID)),
 	}
 }
 
@@ -39,7 +40,8 @@ type Pets struct {
 func NewPets(size int, pets []core.Pet) Pets {
 	cursor := ""
 	if len(pets) > size {
-		pets, cursor = pets[:size], fmt.Sprintf("/petshop/pets?cursor=%s", pets[size].ID)
+		path := filepath.Join("/", core.PETSHOP, core.PETS)
+		pets, cursor = pets[:size], fmt.Sprintf("%s?cursor=%s", path, pets[size].ID)
 	}
 
 	seq := make([]Pet, len(pets))

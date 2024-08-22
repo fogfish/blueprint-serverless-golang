@@ -2,11 +2,13 @@ package http_test
 
 import (
 	"errors"
+	"path/filepath"
 	"testing"
 
-	"github.com/fogfish/blueprint-serverless-golang/http"
-	"github.com/fogfish/blueprint-serverless-golang/http/api"
+	"github.com/fogfish/blueprint-serverless-golang/internal/core"
+	"github.com/fogfish/blueprint-serverless-golang/internal/http"
 	"github.com/fogfish/blueprint-serverless-golang/internal/mock"
+	"github.com/fogfish/blueprint-serverless-golang/pkg/api"
 	µ "github.com/fogfish/gouldian/v2"
 	µmock "github.com/fogfish/gouldian/v2/mock"
 	ø "github.com/fogfish/gouldian/v2/output"
@@ -34,7 +36,7 @@ func TestPetShopList(t *testing.T) {
 	httpd := µmock.Endpoint(service.List())
 	yield := httpd(µmock.Input(
 		µmock.Method("GET"),
-		µmock.URL("/petshop/pets"),
+		µmock.URL(filepath.Join("/", core.PETSHOP, core.PETS)),
 		µmock.Header("Accept", "application/json"),
 	))
 
@@ -63,7 +65,7 @@ func TestPetShopListWithCursor(t *testing.T) {
 	httpd := µmock.Endpoint(service.List())
 	yield := httpd(µmock.Input(
 		µmock.Method("GET"),
-		µmock.URL("/petshop/pets?cursor=A02"),
+		µmock.URL(filepath.Join("/", core.PETSHOP, core.PETS)+"?cursor=A02"),
 		µmock.Header("Accept", "application/json"),
 	))
 
@@ -92,7 +94,7 @@ func TestPetShopListFailed(t *testing.T) {
 	httpd := µmock.Endpoint(service.List())
 	yield := httpd(µmock.Input(
 		µmock.Method("GET"),
-		µmock.URL("/petshop/pets"),
+		µmock.URL(filepath.Join("/", core.PETSHOP, core.PETS)),
 		µmock.Header("Accept", "application/json"),
 	))
 
@@ -119,7 +121,7 @@ func TestPetShopLookup(t *testing.T) {
 	httpd := µmock.Endpoint(service.Lookup())
 	yield := httpd(µmock.Input(
 		µmock.Method("GET"),
-		µmock.URL("/petshop/pets/A01"),
+		µmock.URL(filepath.Join("/", core.PETSHOP, core.PETS, "A01")),
 		µmock.Header("Accept", "application/json"),
 	))
 
@@ -147,9 +149,8 @@ func TestPetShopCreate(t *testing.T) {
 	httpd := µmock.Endpoint(service.Create())
 	yield := httpd(µmock.Input(
 		µmock.Method("POST"),
-		µmock.URL("/petshop/pets"),
+		µmock.URL(filepath.Join("/", core.CONSOLE, core.PETSHOP, core.PETS)),
 		µmock.Header("Accept", "application/json"),
-		µmock.Header("X-Secret-Code", "cGV0c3RvcmU6b3duZXIK"),
 		µmock.JSON(mock.Pets[0]),
 	))
 
